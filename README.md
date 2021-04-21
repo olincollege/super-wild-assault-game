@@ -1,2 +1,1 @@
-# SWAG-softdes-final
-Super Wild Assault Game
+# S.W.A.G. - Super Wild Assault Game
