@@ -1,2 +1,2 @@
-frame, type, x, y, width, height, damage, knockback, knockbackx, knockbacky
+frame, type, x, y, xoffset, yoffset, width, height, damage, knockback, knockbackx, knockbacky
 0, hurt, 5, 5, 10, 10
