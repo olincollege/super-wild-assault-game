@@ -1,30 +1,29 @@
 from typing import Tuple, NamedTuple, List
+import pygame
 from pygame import Vector2
+import csv
 from os import listdir, path
 from abc import ABC, abstractmethod
 
-class Animation(ABC):
-    def __init__(self, animation_path: str) -> None:
-        self.__animation_path = animation_path
-        self.__sprites_list = [pygame.image.load(frame) for frame in listdir(path.join(animation_path,'sprites')]
+class Animation:
+    def __init__(self, character: str, move: str) -> None:
+        self.__character_path = path.join('chars', character)
+        self.__sprites_path = path.join(self.__character_path, 'sprites', move)
+        self.__sprites_list = [pygame.image.load(frame) for frame in listdir(self.__sprites_path)]
+        self.__framedata_path = path.join(self.__character_path, 'animations', f'{move}.anim')
+        self.__move = move
         self.__animation_length = len(self.__sprites_list)
         self.__current_frame = 0
+        self.__hurtboxes = []
+        self.__hitboxes = []
+        self.__collisions = self.get_collision_boxes()
 
-    @abstractmethod
     def get_collision_boxes(self) -> None:
-        pass
-
-
-class AttackAnimation(Animation):
-    def __init__(self, animation_path: str) -> None:
-        super().__init__(animation_path)
-        # import hitboxes from file
-
-
-class PassiveAnimation(Animation):
-    def __init__(self, animation_path: str) -> None:
-        super().__init__(animation_path)
-        # import hurtboxes from file
+        framedata = []
+        with open(self.__framedata_path, 'r') as framedata_file:
+            reader = csv.reader(framedata_file)
+            for row in reader:
+                framedata.append(row)
 
 
 class Point2D(NamedTuple):
@@ -32,14 +31,9 @@ class Point2D(NamedTuple):
     y: int
 
 
-class Hurtbox(NamedTuple):
-    origin: Point2D
-    radius: int
-
-
-class Hitbox(NamedTuple):
-    origin: Point2D
-    radius: int
+class CollisionBox(NamedTuple):
+    topleft: Point2D
+    bottomright: Point2D
     damage: int
     knockback_scale: float
     knockback_direction: Vector2
