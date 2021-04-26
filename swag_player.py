@@ -3,7 +3,7 @@ docstring moment
 '''
 
 class Player:
-    def __init__(self, player_number: int) -> None:
+    def __init__(self, player_number: int, character: str) -> None:
         self.__player_number = player_number
 
     def attack(self, action):
