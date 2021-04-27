@@ -8,7 +8,7 @@ from pygame import Vector2
 class Player(pygame.sprite.Sprite):
     def __init__(self, player_number: int, character: str) -> None:
         super().__init__()
-        self.__player_number = player_number
+        self._player_number = player_number
         self.surf = pygame.image.load(os.path.join('chars', character, 'sprites', 'idle', f'{character}_idle-1.png'))
         self.rect = self.surf.get_rect(center = (500, 500))
         self.pos = Vector2((500,500))
@@ -17,7 +17,7 @@ class Player(pygame.sprite.Sprite):
 
     @property
     def player_number(self):
-        return self.__player_number
+        return self._player_number
 
     def action(self, action):
         if action == 'left':
