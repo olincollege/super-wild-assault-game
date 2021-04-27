@@ -4,13 +4,14 @@ Controllers for each player in the game (P1 and P2).
 from abc import ABC, abstractmethod
 import pygame
 from pygame.locals import *
+from swag_stage import SwagStage
 
 class SwagInputHandler(ABC):
     '''
     Docstring lol
     '''
 
-    def __init__(self, scene: SwagScene) -> None:
+    def __init__(self, scene: SwagStage) -> None:
         self.__scene = scene
 
     @abstractmethod
@@ -38,7 +39,7 @@ class PygameInput(SwagInputHandler):
         }
     }
 
-    def __init__(self, scene: SwagScene, player: int) -> None:
+    def __init__(self, scene: SwagStage, player: int) -> None:
         super().__init__(scene)
         self.__player = player
         self.__keybinds = self.keybinds[player]
