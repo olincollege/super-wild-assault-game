@@ -22,8 +22,8 @@ class SwagView(ABC):
         all_sprites.add(P2) # player 2
         self.all_sprites = all_sprites
         # Set up game window
-        self.__HEIGHT = 500 # Window height
-        self.__WIDTH = 500 # Window width
+        self.__HEIGHT = 1000 # Window height
+        self.__WIDTH = 1000 # Window width
         self.__FPS = 60
         self.__FramePerSec = pygame.time.Clock()
     
