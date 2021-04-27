@@ -7,4 +7,4 @@ class SwagStage(pygame.sprite.Sprite):
         super().__init__()
         self.surf = pygame.Surface([1000, 50])
         self.surf.fill((255,255,255))
-        self.rect = self.image.get_rect(center = (1000/2, 1000-50))
+        self.rect = self.surf.get_rect(center = (1000/2, 1000-50))

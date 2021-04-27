@@ -10,7 +10,7 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         self.__player_number = player_number
         self.surf = pygame.image.load(os.path.join('chars', character, 'sprites', 'idle', f'{character}_idle-1.png'))
-        self.rect = self.image.get_rect(center = (500, 500))
+        self.rect = self.surf.get_rect(center = (500, 500))
         self.pos = Vector2((500,500))
         self.vel = Vector2(0,0)
         self.acc = Vector2(0,0)
