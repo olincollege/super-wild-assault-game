@@ -48,4 +48,4 @@ class PygameInput(SwagInputHandler):
         keys_pressed = pygame.key.get_pressed()
         for key in self.__keybinds:
             if keys_pressed[key]:
-                self.__player.attack(self.__keybinds[key])
+                self.__player.action(self.__keybinds[key])
