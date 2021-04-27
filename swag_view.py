@@ -4,6 +4,7 @@ SWAG game view.
 from abc import ABC, abstractmethod
 import pygame
 from pygame.locals import *
+from swag_scene import SwagScene
 
 class SwagView(ABC):
     '''
