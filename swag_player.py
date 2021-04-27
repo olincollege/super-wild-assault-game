@@ -15,6 +15,10 @@ class Player(pygame.sprite.Sprite):
         self.vel = Vector2(0,0)
         self.acc = Vector2(0,0)
 
+    @property
+    def player_number(self):
+        return self.__player_number
+
     def action(self, action):
         if action == 'left':
             self.pos.x -= 1
