@@ -65,7 +65,7 @@ class PygameView(SwagView):
         Outputs pygame view of SWAG game.
         '''
         # Default Blank Background
-        self.displaysurface.fill((0,0,0))
+        self.displaysurface.fill((255,255,255))
         # Render game
         for entity in self.all_sprites:
             self.displaysurface.blit(entity.surf, entity.rect)
