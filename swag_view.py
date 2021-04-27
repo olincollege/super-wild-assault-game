@@ -11,7 +11,7 @@ class SwagView(ABC):
     '''
     Docstring
     '''
-    def ___init___(self, stage: SwagStage, P1: Player, P2: Player) -> None:
+    def __init__(self, stage: SwagStage, P1: Player, P2: Player) -> None:
         self.__stage = stage
         self.__P1 = P1
         self.__P2 = P2
@@ -55,8 +55,8 @@ class PygameView(SwagView):
     Attributes:
         scene: class representing current instance of game
     '''
-    def ___init___(self):
-        super(PygameView, self).__init__()
+    def __init__(self, stage: SwagStage, P1: Player, P2: Player):
+        super().__init__(stage, P1, P2)
         self.displaysurface = pygame.display.set_mode((self.__WIDTH, self.__HEIGHT))
         pygame.display.set_caption("S.W.A.G.: Super Wild Assault Game")
 
@@ -71,4 +71,3 @@ class PygameView(SwagView):
             self.displaysurface.blit(entity.surf, entity.rect)
         pygame.display.update()
         self.__FramePerSec.tick(self.__FPS)
-        pass
