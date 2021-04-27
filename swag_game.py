@@ -31,7 +31,7 @@ if __name__ == '__main__':
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit() 
-                
-            for controller in CONTROLLERS:
-                controller.poll_input()
+
+        for controller in CONTROLLERS:
+            controller.poll_input()
         VIEW.draw()
