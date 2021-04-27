@@ -24,6 +24,7 @@ if __name__ == '__main__':
 
     CONTROLLERS = [PygameInput(P1), PygameInput(P2)]
 
+    VIEW.draw()
     while True:
         for event in pygame.event.get():
             # Will run when the close window button is clicked    
@@ -33,3 +34,4 @@ if __name__ == '__main__':
                 
             for controller in CONTROLLERS:
                 controller.poll_input()
+        VIEW.draw()
