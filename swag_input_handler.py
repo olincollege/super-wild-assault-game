@@ -42,7 +42,7 @@ class PygameInput(SwagInputHandler):
 
     def __init__(self, player: Player) -> None:
         super().__init__(player)
-        self.__keybinds = self.keybinds[player]
+        self.__keybinds = self.keybinds[player.player_number]
 
     def poll_input(self):
         keys_pressed = pygame.key.get_pressed()
