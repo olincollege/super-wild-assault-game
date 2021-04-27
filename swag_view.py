@@ -12,9 +12,9 @@ class SwagView(ABC):
     Docstring
     '''
     def __init__(self, stage: SwagStage, P1: Player, P2: Player) -> None:
-        self.__stage = stage
-        self.__P1 = P1
-        self.__P2 = P2
+        self._stage = stage
+        self._P1 = P1
+        self._P2 = P2
         # Use to show sprites
         all_sprites = pygame.sprite.Group()
         all_sprites.add(stage) # platform
@@ -22,24 +22,24 @@ class SwagView(ABC):
         all_sprites.add(P2) # player 2
         self.all_sprites = all_sprites
         # Set up game window
-        self.__HEIGHT = 1000 # Window height
-        self.__WIDTH = 1000 # Window width
-        self.__FPS = 60
-        self.__FramePerSec = pygame.time.Clock()
+        self._HEIGHT = 1000 # Window height
+        self._WIDTH = 1000 # Window width
+        self._FPS = 60
+        self._FramePerSec = pygame.time.Clock()
     
     @property
     def stage(self):
         '''
         Return the value of private stage attribute.
         '''
-        return self.__stage
+        return self._stage
     
     @property
     def fps(self):
         '''
         Return the FPS of the game.
         '''
-        return self.__FPS
+        return self._FPS
 
     @abstractmethod
     def draw(self):
@@ -57,7 +57,7 @@ class PygameView(SwagView):
     '''
     def __init__(self, stage: SwagStage, P1: Player, P2: Player):
         super().__init__(stage, P1, P2)
-        self.displaysurface = pygame.display.set_mode((self.__WIDTH, self.__HEIGHT))
+        self.displaysurface = pygame.display.set_mode((self._WIDTH, self._HEIGHT))
         pygame.display.set_caption("S.W.A.G.: Super Wild Assault Game")
 
     def draw(self):
@@ -70,4 +70,4 @@ class PygameView(SwagView):
         for entity in self.all_sprites:
             self.displaysurface.blit(entity.surf, entity.rect)
         pygame.display.update()
-        self.__FramePerSec.tick(self.__FPS)
+        self._FramePerSec.tick(self._FPS)
