@@ -8,8 +8,13 @@ class SwagStage(pygame.sprite.Sprite):
         self.surf = pygame.Surface([1000, 50])
         self.surf.fill((255,255,255))
         self.rect = self.surf.get_rect(center = (1000/2, 1000-50))
-        self._FRICTION = -0.1
+        self.__FRICTION = -0.1
+        self.__GRAVITY = .02
 
     @property
     def friction(self):
-        return self._FRICTION
+        return self.__FRICTION
+
+    @property
+    def gravity(self):
+        return self.__GRAVITY
