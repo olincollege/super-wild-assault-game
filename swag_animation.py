@@ -18,12 +18,21 @@ class Animation:
         self.__hitboxes = []
         self.__collisions = self.get_collision_boxes()
 
+    @property
+    def move(self) -> str:
+        return __move
+
     def get_collision_boxes(self) -> None:
         framedata = []
         with open(self.__framedata_path, 'r') as framedata_file:
             reader = csv.reader(framedata_file)
             for row in reader:
                 framedata.append(row)
+    
+    def update_frame(self):
+        if self.__current_frame > self.__animation_length:
+            self.__current_frame = 0
+
 
 
 class Point2D(NamedTuple):
