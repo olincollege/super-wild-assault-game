@@ -15,11 +15,13 @@ if __name__ == '__main__':
     # Initialize pygame
     pygame.init()
 
-    # create players
-    P1 = Player(1, 'olinman')
-    P2 = Player(2, 'catboy')
     # create stage
-    STAGE = SwagStage(P1, P2)
+    STAGE = SwagStage()
+
+    # create players
+    P1 = Player(1, 'olinman', STAGE)
+    P2 = Player(2, 'catboy', STAGE)
+
     VIEW = PygameView(STAGE, P1, P2)
 
     CONTROLLERS = [PygameInput(P1), PygameInput(P2)]
@@ -34,4 +36,6 @@ if __name__ == '__main__':
 
         for controller in CONTROLLERS:
             controller.poll_input()
+        P1.update()
+        P2.update()
         VIEW.draw()
