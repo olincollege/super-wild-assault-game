@@ -30,13 +30,15 @@ class PygameInput(SwagInputHandler):
             pygame.K_UP: 'jump',
             pygame.K_LEFT: 'left',
             pygame.K_RIGHT: 'right',
-            pygame.K_v: 'attack'
+            pygame.K_LSHIFT: 'jab',
+            pygame.K_c: 'block'
         },
         2: {
             pygame.K_w: 'jump',
             pygame.K_a: 'left',
             pygame.K_d: 'right',
-            pygame.K_PERIOD: 'attack'
+            pygame.K_RCTRL: 'jab',
+            pygame.K_RSHIFT: 'block'
         }
     }
 
@@ -49,3 +51,5 @@ class PygameInput(SwagInputHandler):
         for key in self._keybinds:
             if keys_pressed[key]:
                 self._player.action(self._keybinds[key])
+        if not any(keys_pressed):
+            self._player.action('idle')
