@@ -16,7 +16,7 @@ class Player(pygame.sprite.Sprite):
         self._player_number = player_number
         self.surf = pygame.image.load(os.path.join('chars', character, 'sprites', 'idle',
             f'{character}_idle-1.png'))
-        self.rect = self.surf.get_rect(center = (500, 500))
+        self.rect = self.surf.get_rect(center = (500, 250))
         
         self._walk_accel = .3
         self._walk_speed_cap = 3
@@ -79,11 +79,19 @@ class Player(pygame.sprite.Sprite):
         self.acc.y += self._stage.gravity * self._weight
         self.acc.x += self.vel.x * self._stage.friction
         self.vel += self.acc
-        if self.vel.x > self._walk_speed_cap:
+
+        # print(f'vel: {self.vel}')
+        # print(f'fric: {fric_accel}')
+        # print(f'accel: {self.acc}')
+
+        if self.vel.x > self._walk_speed_cap and self._is_walking:
             self.vel.x = self._walk_speed_cap
-        if abs(self.vel.x) < .09:
+        if abs(self.vel.x) < .1:
             self.vel.x = 0
             self.acc.x = 0
+            if self._is_walking:
+                self._current_animation.reset()
+                self._current_animation = self._animations['idle']
 
         self.surf = self._current_animation.update_frame()
         self.rect = self.surf.get_rect(center = (self.pos.x, self.pos.y))
@@ -94,8 +102,8 @@ class Player(pygame.sprite.Sprite):
 
         self.pos += self.vel + 0.5 * self.acc
         self.rect.midbottom = self.pos
-        if self._player_number == 1:
-            print(self.pos)
+        # if self._player_number == 1:
+        #     print(f'lomcatin: {self.pos}')
 
     def _stage_collision_check(self):
         collisions = pygame.sprite.spritecollide(self, self._stage_group, False)
