@@ -86,6 +86,7 @@ class Player(pygame.sprite.Sprite):
             self.acc.x = 0
 
         self.surf = self._current_animation.update_frame()
+        self.rect = self.surf.get_rect(center = (self.pos.x, self.pos.y))
         if self._facing_left:
             self.surf = pygame.transform.flip(self.surf, True, False)
 
