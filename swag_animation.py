@@ -12,7 +12,8 @@ class Animation:
         self.__character_path = path.join('chars', character)
         self.__sprites_path = path.join(self.__character_path, 'sprites', move)
         sprite_filenames = listdir(self.__sprites_path)
-        sprite_filenames = [path.join(self.__sprites_path, name) for name in sprite_filenames]
+        sprite_filenames = [path.join(self.__sprites_path, name) for name in sprite_filenames
+                            if name[-4:] == '.png']
         sprite_filenames.sort()
         self.__sprites_list = [pygame.image.load(frame) for frame in sprite_filenames]
         self.__framedata_path = path.join(self.__character_path, 'animations', f'{move}.anim')
