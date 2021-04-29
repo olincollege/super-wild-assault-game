@@ -14,7 +14,8 @@ class Player(pygame.sprite.Sprite):
         self._stage = stage
         self._character = character
         self._player_number = player_number
-        self.surf = pygame.image.load(os.path.join('chars', character, 'sprites', 'idle', f'{character}_idle-1.png'))
+        self.surf = pygame.image.load(os.path.join('chars', character, 'sprites', 'idle',
+            f'{character}_idle-1.png'))
         self.rect = self.surf.get_rect(center = (500, 500))
         
         self._walk_accel = .3
@@ -33,17 +34,13 @@ class Player(pygame.sprite.Sprite):
         self._stage_group = pygame.sprite.Group()
         self._stage_group.add(self._stage)
 
-        self._animations = {}
         self.moves = ['block','hit','idle','jab','jump', 'walk']
-        self._generate_anims()
+        self._animations = {move: Animation(self._character, move) for move in self.moves}
         self._current_animation = self._animations['idle']  # type: Animation
 
     @property
     def player_number(self):
         return self._player_number
-
-    def _generate_anims(self):
-        self._animations = {move: Animation(self._character, move) for move in self.moves}
 
     def action(self, action):
         # determine which animation is being asked for
@@ -86,6 +83,7 @@ class Player(pygame.sprite.Sprite):
             self.vel.x = self._walk_speed_cap
         if abs(self.vel.x) < .09:
             self.vel.x = 0
+            self.acc.x = 0
 
         self.surf = self._current_animation.update_frame()
         if self._facing_left:
@@ -95,6 +93,8 @@ class Player(pygame.sprite.Sprite):
 
         self.pos += self.vel + 0.5 * self.acc
         self.rect.midbottom = self.pos
+        if self._player_number == 1:
+            print(self.pos)
 
     def _stage_collision_check(self):
         collisions = pygame.sprite.spritecollide(self, self._stage_group, False)
