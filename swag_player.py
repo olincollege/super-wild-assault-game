@@ -6,23 +6,15 @@ import pygame
 from pygame import Vector2
 from swag_animation import Animation
 from swag_stage import SwagStage
+from swag_collision import SwagCollisionSprite
 
 def hitbox_collision(sprite1, sprite2):
     """
     Check if two hitboxes collide
     """
-    if hasattr(sprite1, 'hitbox'):
-        hitbox1 = sprite1.hitbox
-    else:
-        hitbox1 = sprite1.rect
+    return sprite1.collision.colliderect(sprite2.collision)
 
-    if hasattr(sprite2, 'hitbox'):
-        hitbox2 = sprite2.hitbox
-    else:
-        hitbox2 = sprite2.rect
-    return hitbox1.colliderect(hitbox2)
-
-class Player(pygame.sprite.Sprite):
+class Player(SwagCollisionSprite):
 
     def __init__(self, player_number: int, character: str, stage: SwagStage) -> None:
         super().__init__()
@@ -117,13 +109,9 @@ class Player(pygame.sprite.Sprite):
         if self.vel.y > 0:
             if collisions:
                 lowest = collisions[0]
-                if hasattr(lowest, 'hitbox'):
-                    hitbox_ground = lowest.hitbox
-                else:
-                    hitbox_ground = lowest.rect
                 # Don't let players drop below lowest point
-                if self.pos.y < hitbox_ground.bottom:
-                    self.pos.y = hitbox_ground.top + 1
+                if self.pos.y < lowest.collision.bottom:
+                    self.pos.y = lowest.collision.top + 1
                     self.vel.y = 0
                     self.acc.y = 0
                     self._jumping = False

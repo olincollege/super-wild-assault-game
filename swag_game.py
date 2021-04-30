@@ -3,6 +3,7 @@ Swag Game 👍
 '''
 
 from swag_stage import SwagStage
+from swag_stage import SwagStageBackground
 import sys
 import pygame
 from pygame.locals import *     # type: ignore  pylint: disable=wildcard-import
@@ -16,13 +17,14 @@ if __name__ == '__main__':
     pygame.init()
 
     # create stage
-    STAGE = SwagStage()
+    BACKGROUND = SwagStageBackground()
+    STAGE = SwagStage(BACKGROUND.WIDTH, BACKGROUND.HEIGHT)
 
     # create players
     P1 = Player(1, 'olinman', STAGE)
     P2 = Player(2, 'catboy', STAGE)
 
-    VIEW = PygameView(STAGE, P1, P2)
+    VIEW = PygameView(BACKGROUND,STAGE, P1, P2)
 
     CONTROLLERS = [PygameInput(P1), PygameInput(P2)]
 

@@ -6,24 +6,27 @@ from swag_player import Player
 import pygame
 from pygame.locals import *     # type: ignore  pylint: disable=wildcard-import
 from swag_stage import SwagStage
+from swag_stage import SwagStageBackground
 
 class SwagView(ABC):
     '''
     Docstring
     '''
-    def __init__(self, stage: SwagStage, P1: Player, P2: Player) -> None:
+    def __init__(self, background: SwagStageBackground, stage: SwagStage, P1: Player, P2: Player) -> None:
+        self._background = background
         self._stage = stage
         self._P1 = P1
         self._P2 = P2
         # Use to show sprites
         all_sprites = pygame.sprite.Group()
+        all_sprites.add(background) # background
         all_sprites.add(stage) # platform
         all_sprites.add(P1) # player 1
         all_sprites.add(P2) # player 2
         self.all_sprites = all_sprites
         # Set up game window
-        self._HEIGHT = 1000 # Window height
-        self._WIDTH = 1000 # Window width
+        self._HEIGHT = self._background.WIDTH # Window height
+        self._WIDTH = self._background.HEIGHT # Window width
         self._FPS = 60
         self._FramePerSec = pygame.time.Clock()
     
@@ -55,9 +58,9 @@ class PygameView(SwagView):
     Attributes:
         scene: class representing current instance of game
     '''
-    def __init__(self, stage: SwagStage, P1: Player, P2: Player):
-        super().__init__(stage, P1, P2)
-        self.displaysurface = pygame.display.set_mode((self._WIDTH, self._HEIGHT))
+    def __init__(self, background: SwagStageBackground, stage: SwagStage, P1: Player, P2: Player):
+        super().__init__(background, stage, P1, P2)
+        self.displaysurface = pygame.display.set_mode((self._HEIGHT,self._WIDTH))
         pygame.display.set_caption("S.W.A.G.: Super Wild Assault Game")
 
     def draw(self):
