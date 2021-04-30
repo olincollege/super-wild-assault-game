@@ -30,15 +30,15 @@ class PygameInput(SwagInputHandler):
             pygame.K_UP: 'jump',
             pygame.K_LEFT: 'left',
             pygame.K_RIGHT: 'right',
-            pygame.K_RCTRL: 'jab',
-            pygame.K_RSHIFT: 'block'
+            pygame.K_PERIOD: 'jab',
+            pygame.K_COMMA: 'block'
         },
         2: {
             pygame.K_w: 'jump',
             pygame.K_a: 'left',
             pygame.K_d: 'right',
-            pygame.K_LSHIFT: 'jab',
-            pygame.K_c: 'block'
+            pygame.K_c: 'jab',
+            pygame.K_v: 'block'
         }
     }
 
