@@ -7,6 +7,21 @@ from pygame import Vector2
 from swag_animation import Animation
 from swag_stage import SwagStage
 
+def hitbox_collision(sprite1, sprite2):
+    """
+    Check if two hitboxes collide
+    """
+    if hasattr(sprite1, 'hitbox'):
+        hitbox1 = sprite1.hitbox
+    else:
+        hitbox1 = sprite1.rect
+
+    if hasattr(sprite2, 'hitbox'):
+        hitbox2 = sprite2.hitbox
+    else:
+        hitbox2 = sprite2.rect
+    return hitbox1.colliderect(hitbox2)
+
 class Player(pygame.sprite.Sprite):
 
     def __init__(self, player_number: int, character: str, stage: SwagStage) -> None:
@@ -57,7 +72,6 @@ class Player(pygame.sprite.Sprite):
         # special cases for when the player should be moving around
         # walking:
         if self._current_animation.move == 'walk':
-            self._locked_animation = False
             self._is_walking = True
             if action == 'left':
                 self.acc.x = -self._walk_accel
@@ -70,13 +84,15 @@ class Player(pygame.sprite.Sprite):
         else:
             self._is_walking = False
         
-        if action == 'idle':
-            self.vel.x = 0
-            self.acc.x = 0
         # jumping:
         if self._current_animation.move == 'jump':
-            # do jump physics
-            pass
+            self._jumping = True
+            self.vel.y = -10
+        
+        # If the action is idle and knockback etc. not applied
+        if action == 'idle' and not self._locked_animation:
+            self.vel.x = 0
+            self.acc.x = 0
 
     def update(self):
         self.acc.y += self._stage.gravity * self._weight
@@ -97,15 +113,21 @@ class Player(pygame.sprite.Sprite):
         self.rect.midbottom = self.pos
 
     def _stage_collision_check(self):
-        collisions = pygame.sprite.spritecollide(self, self._stage_group, False)
+        collisions = pygame.sprite.spritecollide(self, self._stage_group, False, collided=hitbox_collision)
         if self.vel.y > 0:
             if collisions:
                 lowest = collisions[0]
-                if self.pos.y < lowest.rect.bottom:
-                    self.pos.y = lowest.rect.top + 1
+                if hasattr(lowest, 'hitbox'):
+                    hitbox_ground = lowest.hitbox
+                else:
+                    hitbox_ground = lowest.rect
+                # Don't let players drop below lowest point
+                if self.pos.y < hitbox_ground.bottom:
+                    self.pos.y = hitbox_ground.top + 1
                     self.vel.y = 0
                     self.acc.y = 0
                     self._jumping = False
+                    self._locked_animation = False # fix later
 
     def attacked(self, damage, base_knockback, knockback_direction):
         pass
