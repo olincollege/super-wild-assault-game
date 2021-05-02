@@ -10,12 +10,17 @@ class SwagStage(SwagCollisionSprite):
         self.surf = pygame.image.load("./background_data/stage.png")
         self.rect = self.surf.get_rect(center = (bkg_width/2, bkg_height-100))
         self.hitbox = self.surf.get_rect(center = (bkg_width/2, bkg_height-53))
-        self.__FRICTION = -0.1
+        self.__FRICTION = 0.1
+        self.__AIR_RESIST = 0.1
         self.__GRAVITY = .2
 
     @property
     def friction(self):
         return self.__FRICTION
+
+    @property
+    def air_resist(self):
+        return self.__AIR_RESIST
 
     @property
     def gravity(self):

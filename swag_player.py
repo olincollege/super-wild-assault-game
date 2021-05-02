@@ -2,6 +2,7 @@
 docstring moment
 '''
 import os
+from math import copysign
 import pygame
 from pygame import Vector2
 from swag_animation import Animation
@@ -32,6 +33,7 @@ class Player(SwagCollisionSprite):
         self.pos = Vector2((500,500))
         self.vel = Vector2(0,0)
         self.acc = Vector2(0,0)
+        self.controlled_acc = Vector2(0,0)
         self._facing_left = False
         self._flip = False
 
@@ -58,41 +60,49 @@ class Player(SwagCollisionSprite):
         # if prior move not the same and animation is ok to switch, reset animation frame then
         # change current animation
         if self._current_animation.move != new_animation and not self._locked_animation:
-            self._current_animation.reset()
-            self._current_animation = self._animations[new_animation]
+            if not (new_animation == 'jump' and self._jumping):
+                self._current_animation.reset()
+                self._current_animation = self._animations[new_animation]
 
         # special cases for when the player should be moving around
         # walking:
         if self._current_animation.move == 'walk':
             self._is_walking = True
             if action == 'left':
-                self.acc.x = -self._walk_accel
+                self.controlled_acc.x = -self._walk_accel
                 if not self._facing_left:
                     self._facing_left = True
             if action == 'right':
-                self.acc.x = self._walk_accel
+                self.controlled_acc.x = self._walk_accel
                 if self._facing_left:
                     self._facing_left = False
         else:
             self._is_walking = False
         
         # jumping:
-        if self._current_animation.move == 'jump':
+        if self._current_animation.move == 'jump' and not self._jumping:
             self._jumping = True
-            self.vel.y = -10
-        
-        # If the action is idle and knockback etc. not applied
-        if action == 'idle' and not self._locked_animation:
-            self.vel.x = 0
-            self.acc.x = 0
+            self.controlled_acc.y = -7
 
     def update(self):
+        sign = lambda x : copysign(1, x)
         self.acc.y += self._stage.gravity * self._weight
-        self.acc.x += self.vel.x * self._stage.friction
+        self.acc.y += self.controlled_acc.y
+        if self._stage_collision():
+            friction_acc = self._weight * self._stage.friction * -sign(self.vel.x) * (abs(self.vel.x) > 0)
+            self.acc.x += friction_acc
+        else:
+            air_resist_acc = self._weight * self._stage.air_resist * -sign(self.vel.x) * (abs(self.vel.x) > 0)
+            self.acc.x += air_resist_acc
+
+        self.acc.x += self.controlled_acc.x
         self.vel += self.acc
 
-        if self.vel.x > self._walk_speed_cap and self._is_walking:
-            self.vel.x = self._walk_speed_cap
+        if abs(self.vel.x) > self._walk_speed_cap and self._is_walking:
+            self.vel.x = self._walk_speed_cap * sign(self.vel.x)
+
+        if abs(self.vel.x) < .3:
+            self.vel.x = 0
 
         self.surf = self._current_animation.update_frame()
         self.rect = self.surf.get_rect(center = (self.pos.x, self.pos.y))
@@ -103,6 +113,13 @@ class Player(SwagCollisionSprite):
 
         self.pos += self.vel + 0.5 * self.acc
         self.rect.midbottom = self.pos
+        self.controlled_acc.x = 0
+        self.controlled_acc.y = 0
+        self.acc.x = 0
+        self.acc.y = 0
+
+    def _stage_collision(self):
+        return pygame.sprite.spritecollide(self, self._stage_group, False, collided=hitbox_collision)
 
     def _stage_collision_check(self):
         collisions = pygame.sprite.spritecollide(self, self._stage_group, False, collided=hitbox_collision)
