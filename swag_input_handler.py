@@ -48,8 +48,11 @@ class PygameInput(SwagInputHandler):
 
     def poll_input(self):
         keys_pressed = pygame.key.get_pressed()
+        player_keys_pressed = {}
+        for key in self._keybinds:
+            player_keys_pressed[key] = keys_pressed[key]
         for key in self._keybinds:
             if keys_pressed[key]:
                 self._player.action(self._keybinds[key])
-        if not any(keys_pressed):
+        if not any(player_keys_pressed.values()):
             self._player.action('idle')
