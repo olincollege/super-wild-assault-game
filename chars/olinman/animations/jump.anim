@@ -1,0 +1,17 @@
+frame, type, x, y, xoffset, yoffset, width, height, damage, knockback, knockbackx, knockbacky, cancelable
+    0, hurt, 0, 0,       0,       0,     0,      0,      0,         0,          0,          0,      false
+    0,  hit, 0, 0,       0,       0,     0,      0,      0,         0,          0,          0,      false
+    1, hurt, 0, 0,       0,       0,     0,      0,      0,         0,          0,          0,      false
+    1,  hit, 0, 0,       0,       0,     0,      0,      0,         0,          0,          0,      false
+    2, hurt, 0, 0,       0,       0,     0,      0,      0,         0,          0,          0,      false
+    2,  hit, 0, 0,       0,       0,     0,      0,      0,         0,          0,          0,      false
+    3, hurt, 0, 0,       0,       0,     0,      0,      0,         0,          0,          0,      false
+    3,  hit, 0, 0,       0,       0,     0,      0,      0,         0,          0,          0,      false
+    4, hurt, 0, 0,       0,       0,     0,      0,      0,         0,          0,          0,      false
+    4,  hit, 0, 0,       0,       0,     0,      0,      0,         0,          0,          0,      false
+    5, hurt, 0, 0,       0,       0,     0,      0,      0,         0,          0,          0,      false
+    5,  hit, 0, 0,       0,       0,     0,      0,      0,         0,          0,          0,      false
+    6, hurt, 0, 0,       0,       0,     0,      0,      0,         0,          0,          0,      false
+    6,  hit, 0, 0,       0,       0,     0,      0,      0,         0,          0,          0,      false
+    7, hurt, 0, 0,       0,       0,     0,      0,      0,         0,          0,          0,      false
+    7,  hit, 0, 0,       0,       0,     0,      0,      0,         0,          0,          0,      false
