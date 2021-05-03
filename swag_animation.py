@@ -8,7 +8,7 @@ from abc import ABC, abstractmethod
 class Animation:
     
     REPEAT_FRAME = 5
-    def __init__(self, character: str, move: str) -> None:
+    def __init__(self, character: str, move: str, end_callback=None) -> None:
         self.__character_path = path.join('chars', character)
         self.__sprites_path = path.join(self.__character_path, 'sprites', move)
         sprite_filenames = listdir(self.__sprites_path)
@@ -23,6 +23,9 @@ class Animation:
         self.__repetition = 0
         self.__hurtboxes = []
         self.__hitboxes = []
+        self.__cancelable = False
+        self.__endlag = 0
+        self.__end_callback = end_callback
         # self.__collisions = self.get_collision_boxes()
 
     def __repr__(self):
@@ -31,6 +34,10 @@ class Animation:
     @property
     def move(self) -> str:
         return self.__move
+
+    @property
+    def cancelable(self) -> bool:
+        return self.__cancelable
 
     def reset(self) -> None:
         self.__current_frame = 0
@@ -49,6 +56,9 @@ class Animation:
             self.__repetition = 0
         if self.__current_frame > self.__animation_length-1:
             self.__current_frame = 0
+            if self.__end_callback:
+                self.__end_callback()
+                return self.__sprites_list[-1]
         return self.__sprites_list[self.__current_frame]
 
 
