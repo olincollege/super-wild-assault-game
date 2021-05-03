@@ -4,6 +4,7 @@ docstring moment
 import os
 from math import copysign
 import pygame
+import json
 from pygame import Vector2
 from swag_animation import Animation
 from swag_stage import SwagStage
@@ -25,10 +26,28 @@ class Player(SwagCollisionSprite):
         self.surf = pygame.image.load(os.path.join('chars', character, 'sprites', 'idle',
             f'{character}_idle-1.png'))
         self.rect = self.surf.get_rect(center = (500, 250))
-        
-        self._walk_accel = .3
-        self._walk_speed_cap = 3
+
+        # default values, these are replaced by the available values in the .info file
+        self._name = character
+        self._health = 100
+        self._ground_accel = .3
+        self._ground_speed = 3
+        self._air_accel = .3
+        self._air_speed = 3
         self._weight = 1
+        self._gravity = .5
+        self._fall_speed = 3
+        self._jump_accel = -10
+        self._traction = 0.1
+
+        # with open(os.path.join('chars', character, f'{character}.info'), 'r') as info_file:
+        #     info = json.load(info_file)
+        #     self._name = info['name']
+        #     self._health = info['health']
+        #     self._ground_accel = info['ground_accel']
+        #     self._ground_speed_cap = info['ground_speed_cap']
+        #     self._weight = info['weight']
+        #     self._jump_accel = info['jump_accel']
 
         self.pos = Vector2((500,500))
         self.vel = Vector2(0,0)
@@ -51,6 +70,10 @@ class Player(SwagCollisionSprite):
     def player_number(self):
         return self._player_number
 
+    def start_idle(self):
+        self._current_animation.reset()
+        self._current_animation = self._animations['idle']
+
     def action(self, action):
         # determine which animation is being asked for
         new_animation = action
@@ -69,11 +92,11 @@ class Player(SwagCollisionSprite):
         if self._current_animation.move == 'walk':
             self._is_walking = True
             if action == 'left':
-                self.controlled_acc.x = -self._walk_accel
+                self.controlled_acc.x = -self._ground_accel
                 if not self._facing_left:
                     self._facing_left = True
             if action == 'right':
-                self.controlled_acc.x = self._walk_accel
+                self.controlled_acc.x = self._ground_accel
                 if self._facing_left:
                     self._facing_left = False
         else:
@@ -82,24 +105,24 @@ class Player(SwagCollisionSprite):
         # jumping:
         if self._current_animation.move == 'jump' and not self._jumping:
             self._jumping = True
-            self.controlled_acc.y = -7
+            self.controlled_acc.y = self._jump_accel
 
     def update(self):
         sign = lambda x : copysign(1, x)
-        self.acc.y += self._stage.gravity * self._weight
+        self.acc.y += self._gravity
         self.acc.y += self.controlled_acc.y
         if self._stage_collision():
-            friction_acc = self._weight * self._stage.friction * -sign(self.vel.x) * (abs(self.vel.x) > 0)
+            friction_acc = self._traction * -sign(self.vel.x) * (abs(self.vel.x) > 0)
             self.acc.x += friction_acc
         else:
-            air_resist_acc = self._weight * self._stage.air_resist * -sign(self.vel.x) * (abs(self.vel.x) > 0)
+            air_resist_acc = self._air_accel * -sign(self.vel.x) * (abs(self.vel.x) > 0)
             self.acc.x += air_resist_acc
 
         self.acc.x += self.controlled_acc.x
         self.vel += self.acc
 
-        if abs(self.vel.x) > self._walk_speed_cap and self._is_walking:
-            self.vel.x = self._walk_speed_cap * sign(self.vel.x)
+        if abs(self.vel.x) > self._ground_speed and self._is_walking:
+            self.vel.x = self._ground_speed * sign(self.vel.x)
 
         if abs(self.vel.x) < .3:
             self.vel.x = 0
@@ -122,7 +145,7 @@ class Player(SwagCollisionSprite):
         return pygame.sprite.spritecollide(self, self._stage_group, False, collided=hitbox_collision)
 
     def _stage_collision_check(self):
-        collisions = pygame.sprite.spritecollide(self, self._stage_group, False, collided=hitbox_collision)
+        collisions = self._stage_collision()
         if self.vel.y > 0:
             if collisions:
                 lowest = collisions[0]
