@@ -38,7 +38,7 @@ class Player(SwagCollisionSprite):
         self._gravity = .5
         self._fall_speed = 3
         self._jump_accel = -10
-        self._traction = 0.1
+        self._traction = 0.2
 
         # with open(os.path.join('chars', character, f'{character}.info'), 'r') as info_file:
         #     info = json.load(info_file)
@@ -52,10 +52,12 @@ class Player(SwagCollisionSprite):
         self.pos = Vector2((500,500))
         self.vel = Vector2(0,0)
         self.acc = Vector2(0,0)
+        self.knockback_acc = Vector2(0,0)
         self.controlled_acc = Vector2(0,0)
         self._facing_left = False
         self._flip = False
 
+        self._hitstun = False
         self._locked_animation = False
         self._is_walking = False
 
@@ -109,35 +111,52 @@ class Player(SwagCollisionSprite):
 
     def update(self):
         sign = lambda x : copysign(1, x)
-        self.acc.y += self._gravity
-        self.acc.y += self.controlled_acc.y
-        if self._stage_collision():
-            friction_acc = self._traction * -sign(self.vel.x) * (abs(self.vel.x) > 0)
-            self.acc.x += friction_acc
-        else:
-            air_resist_acc = self._air_accel * -sign(self.vel.x) * (abs(self.vel.x) > 0)
-            self.acc.x += air_resist_acc
 
-        self.acc.x += self.controlled_acc.x
-        self.vel += self.acc
+        # add appropriate resistive force depending on whether or not the player is on the ground
+        friction_acc = 0
+        if not self.controlled_acc.x:
+            if self._stage_collision():
+                friction_acc = self._traction * -sign(self.vel.x) * (abs(self.vel.x) > 0)
+            else:
+                friction_acc = self._air_accel * -sign(self.vel.x) * (abs(self.vel.x) > 0)
 
+        self.acc.x += friction_acc
+
+        # if in hitstun, make controlled acceleration much smaller
+        if self._hitstun:
+            self.controlled_acc.x *= .2
+            self.controlled_acc.y *= .2
+        self.acc.y += self.controlled_acc.y     # jump accel, DI
+        self.acc.y += self._gravity             # fall acceleration
+        self.acc += self.knockback_acc          # knockback
+        self.acc.x += self.controlled_acc.x     # walk accel, DI
+
+        self.vel += self.acc    # update velocity
+
+        # apply ground speed cap
         if abs(self.vel.x) > self._ground_speed and self._is_walking:
             self.vel.x = self._ground_speed * sign(self.vel.x)
 
+        # stop the player if their speed is below a threshold
         if abs(self.vel.x) < .3:
             self.vel.x = 0
 
+        # update the sprite and bounding box for the current animation
         self.surf = self._current_animation.update_frame()
         self.rect = self.surf.get_rect(center = (self.pos.x, self.pos.y))
+        # mirror the sprite horizontally if the player is facing left
         if self._facing_left:
             self.surf = pygame.transform.flip(self.surf, True, False)
 
-        self._stage_collision_check()
+        self._stage_collision_check()   # if player is on the ground, don't let them fall through
 
-        self.pos += self.vel + 0.5 * self.acc
+        self.pos += self.vel + 0.5 * self.acc   # update position based on current vel and accel
         self.rect.midbottom = self.pos
+
         self.controlled_acc.x = 0
         self.controlled_acc.y = 0
+        self.knockback_acc.x = 0
+        self.knockback_acc.x = 0
         self.acc.x = 0
         self.acc.y = 0
 
