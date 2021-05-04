@@ -4,28 +4,33 @@ from pygame import Vector2
 import csv
 from os import listdir, path
 from abc import ABC, abstractmethod
+from swag_player import Player
 
 class Animation:
     
     REPEAT_FRAME = 5
-    def __init__(self, character: str, move: str, end_callback=None) -> None:
+    def __init__(self, player: Player, character: str, move: str) -> None:
         self.__character_path = path.join('chars', character)
+
         self.__sprites_path = path.join(self.__character_path, 'sprites', move)
         sprite_filenames = listdir(self.__sprites_path)
         sprite_filenames = [path.join(self.__sprites_path, name) for name in sprite_filenames
                             if name[-4:] == '.png']
         sprite_filenames.sort()
         self.__sprites_list = [pygame.image.load(frame) for frame in sprite_filenames]
+
         self.__framedata_path = path.join(self.__character_path, 'animations', f'{move}.anim')
+
         self.__move = move
         self.__animation_length = len(self.__sprites_list)
+
         self.__current_frame = 0
         self.__repetition = 0
+        
         self.__hurtboxes = []
         self.__hitboxes = []
         self.__cancelable = False
         self.__endlag = 0
-        self.__end_callback = end_callback
         # self.__collisions = self.get_collision_boxes()
 
     def __repr__(self):
@@ -61,15 +66,15 @@ class Animation:
                 return self.__sprites_list[-1]
         return self.__sprites_list[self.__current_frame]
 
-
-class Point2D(NamedTuple):
+class CollisionBox(NamedTuple):
     x: int
     y: int
-
-
-class CollisionBox(NamedTuple):
-    topleft: Point2D
-    bottomright: Point2D
+    xoffset: int
+    yoffset: int
+    width: int
+    height: int
     damage: int
     knockback_scale: float
-    knockback_direction: Vector2
+    knockback_x: float
+    knockback_y: float
+    cancelable: bool
