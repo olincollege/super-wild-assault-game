@@ -4,12 +4,11 @@ from pygame import Vector2
 import csv
 from os import listdir, path
 from abc import ABC, abstractmethod
-from swag_player import Player
 
 class Animation:
     
     REPEAT_FRAME = 5
-    def __init__(self, player: Player, character: str, move: str) -> None:
+    def __init__(self, character: str, move: str) -> None:
         self.__character_path = path.join('chars', character)
 
         self.__sprites_path = path.join(self.__character_path, 'sprites', move)
@@ -27,11 +26,11 @@ class Animation:
         self.__current_frame = 0
         self.__repetition = 0
         
-        self.__hurtboxes = []
-        self.__hitboxes = []
+        self.__hurtboxes = {}
+        self.__hitboxes = {}
         self.__cancelable = False
         self.__endlag = 0
-        # self.__collisions = self.get_collision_boxes()
+        self.get_collision_boxes()
 
     def __repr__(self):
         return f'{self.__move} frame {self.__current_frame}'
@@ -49,11 +48,15 @@ class Animation:
 
     def get_collision_boxes(self) -> None:
         framedata = []
-        with open(self.__framedata_path, 'r') as framedata_file:
-            reader = csv.reader(framedata_file)
-            for row in reader:
-                framedata.append(row)
-    
+        if path.isfile(self.__framedata_path):
+            with open(self.__framedata_path, newline='') as framedata_file:
+                reader = csv.reader(framedata_file, skipinitialspace=True)
+                for row in reader:
+                    if row[1] == 'hurt':
+                        self.__hurtboxes[row[0]] = CollisionBox(*row[2:])
+                    elif row[1] == 'hit':
+                        self.__hitboxes[row[0]] = CollisionBox(*row[2:])
+
     def update_frame(self) -> pygame.Surface:
         self.__repetition += 1
         if self.__repetition >= self.REPEAT_FRAME:
@@ -61,10 +64,11 @@ class Animation:
             self.__repetition = 0
         if self.__current_frame > self.__animation_length-1:
             self.__current_frame = 0
-            if self.__end_callback:
-                self.__end_callback()
-                return self.__sprites_list[-1]
+            # if self.__end_callback:
+            #     self.__end_callback()
+            #     return self.__sprites_list[-1]
         return self.__sprites_list[self.__current_frame]
+
 
 class CollisionBox(NamedTuple):
     x: int
