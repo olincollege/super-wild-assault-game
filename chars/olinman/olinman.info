@@ -2,7 +2,12 @@
     "name": "Olinman",
     "health": 100,
     "ground_accel": 0.3,
-    "ground_speed_cap": 3,
+    "ground_speed": 3,
+    "air_accel": 0.3,
+    "air_speed": 3,
     "weight": 1,
-    "jump_accel": -7
+    "gravity": 0.5,
+    "fall_speed": 3,
+    "jump_accel": -10,
+    "traction": 0.2
 }
