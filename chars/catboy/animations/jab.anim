@@ -1,0 +1,23 @@
+frame, type,   x,   y, xoffset, yoffset, width, height, damage, knockback, knockbackx, knockbacky, cancelable
+    1, hurt,  58,  18,       0,       0,    37,     47,      0,         0,          0,          0,      false
+    1, hurt,  16,  51,       0,       0,   104,     67,      0,         0,          0,          0,      false
+    1,  hit,   0,   0,       0,       0,     0,      0,      0,         0,          0,          0,      false
+    2, hurt,  57,  23,       0,       0,    47,     43,      0,         0,          0,          0,      false
+    2, hurt,  14,  56,       0,       0,   111,     62,      0,         0,          0,          0,      false
+    2,  hit,   0,   0,       0,       0,     0,      0,      0,         0,          0,          0,      false
+    3, hurt,  62,  19,       0,       0,    33,     46,      0,         0,          0,          0,      false
+    3, hurt,  20,  56,       0,       0,   107,     62,      0,         0,          0,          0,      false
+    3, hurt,  84,   7,       0,       0,    33,     31,      0,         0,          0,          0,      false
+    3,  hit,  89,   3,       0,       0,    33,     32,      0,         0,          0,          0,      false
+    4, hurt,  53,  14,       0,       0,    34,     49,      0,         0,          0,          0,      false
+    4, hurt,  18,  55,       0,       0,   107,     64,      0,         0,          0,          0,      false
+    4,  hit,  79,  15,       0,       0,    69,     27,      0,         0,          0,          0,      false
+    5, hurt,  55,  13,       0,       0,    33,     44,      0,         0,          0,          0,      false
+    5, hurt,  19,  51,       0,       0,   106,     68,      0,         0,          0,          0,      false
+    5,  hit,   0,   0,       0,       0,     0,      0,      0,         0,          0,          0,      false
+    6, hurt,  60,  13,       0,       0,    28,     54,      0,         0,          0,          0,      false
+    6, hurt,  27,  59,       0,       0,    95,     58,      0,         0,          0,          0,      false
+    6,  hit,   0,   0,       0,       0,     0,      0,      0,         0,          0,          0,      false
+    7, hurt,  53,  19,       0,       0,    28,     46,      0,         0,          0,          0,      false
+    7, hurt,  26,  57,       0,       0,    92,     62,      0,         0,          0,          0,      false
+    7,  hit,   0,   0,       0,       0,     0,      0,      0,         0,          0,          0,      false

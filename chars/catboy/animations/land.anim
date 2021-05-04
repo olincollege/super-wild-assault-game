@@ -1,0 +1,3 @@
+frame, type,  x,  y, xoffset, yoffset, width, height, damage, knockback, knockbackx, knockbacky, cancelable
+    1, hurt, 30, 40,       0,       0,    48,     90,      0,         0,          0,          0,      false
+    2, hurt, 16, 54,       0,       0,    76,     76,      0,         0,          0,          0,      false
