@@ -3,6 +3,7 @@ The model for SWAG. Contains the information about the game "scene", which is th
 '''
 import pygame
 from swag_collision import SwagCollisionSprite
+from math import ceil
 
 class SwagStage(SwagCollisionSprite):
     def __init__(self, bkg_width, bkg_height):
@@ -38,9 +39,16 @@ class SwagStageBackground(SwagCollisionSprite):
         width_ratio = self.WIDTH/width
         height_ratio = self.HEIGHT/height
         value_ratio = max(width_ratio,height_ratio)
-        width = int(width * value_ratio)
-        height = int(height * value_ratio)
+        width = ceil(width * value_ratio) + 1 # Fix rounding error for int, size up
+        height = ceil(height * value_ratio) # Fix rounding error for int, size up
         # Set background image sprite
         self.surf = pygame.transform.scale(self.surf, (width, self.HEIGHT))
         self.rect = pygame.Rect(0,0,self.WIDTH,self.HEIGHT)
         self.hitbox = pygame.Rect(0,0,0,0)
+
+class SwagBarriers(SwagCollisionSprite):
+    def __init__(self, bkg_width, bkg_height, left_x):
+        super().__init__()
+        self.surf = pygame.Surface((0, 0), flags=0)
+        self.rect = pygame.Rect(0,0,0,0)
+        self.hitbox = pygame.Rect(left_x, 0, 1, bkg_height)

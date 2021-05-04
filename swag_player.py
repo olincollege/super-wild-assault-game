@@ -19,9 +19,11 @@ def hitbox_collision(sprite1, sprite2):
 
 class Player(SwagCollisionSprite):
 
-    def __init__(self, player_number: int, character: str, stage: SwagStage) -> None:
+    def __init__(self, player_number: int, character: str, stage: SwagStage, barriers: list) -> None:
         super().__init__()
         self._stage = stage
+        self._barriers = barriers
+
         self._character = character
         self._player_number = player_number
         self.surf = pygame.image.load(os.path.join('chars', character, 'sprites', 'idle',
@@ -44,10 +46,15 @@ class Player(SwagCollisionSprite):
         self._locked_animation = False
         self._is_walking = False
 
+        # stage collisions
         self._stage_group = pygame.sprite.Group()
         self._stage_group.add(self._stage)
+        # barrier collisions
+        self._barrier_group = pygame.sprite.Group()
+        for barrier_sprite in self._barriers:
+            self._barrier_group.add(barrier_sprite)
 
-        self.moves = ['block','hit','idle','jab','jump', 'walk']
+        self.moves = ['block','hit','idle','jab','jump','land', 'walk']
         self._animations = {move: Animation(self._character, move) for move in self.moves}
         self._current_animation = self._animations['idle']  # type: Animation
 
@@ -137,6 +144,7 @@ class Player(SwagCollisionSprite):
             self.surf = pygame.transform.flip(self.surf, True, False)
 
         self._stage_collision_check()   # if player is on the ground, don't let them fall through
+        self._barrier_collision_check() # if the player is crossing over a window barrier
 
         self.pos += self.vel + 0.5 * self.acc   # update position based on current vel and accel
         self.rect.midbottom = self.pos
@@ -153,10 +161,10 @@ class Player(SwagCollisionSprite):
         return pygame.sprite.spritecollide(self, self._stage_group, False, collided=hitbox_collision)
 
     def _stage_collision_check(self):
-        collisions = self._stage_collision()
+        stage_collisions = self._stage_collision()
         if self.vel.y > 0:
-            if collisions:
-                lowest = collisions[0]
+            if stage_collisions:
+                lowest = stage_collisions[0]
                 # Don't let players drop below lowest point
                 if self.pos.y < lowest.collision.bottom:
                     self.pos.y = lowest.collision.top + 1
@@ -164,6 +172,29 @@ class Player(SwagCollisionSprite):
                     self.acc.y = 0
                     self._jumping = False
                     self._locked_animation = False # fix later
+
+    def _barrier_collision(self):
+        return pygame.sprite.spritecollide(self, self._barrier_group, False, collided=hitbox_collision)
+
+    
+    def _barrier_collision_check(self):
+        barrier_collisions = self._barrier_collision()
+        if barrier_collisions:
+            first_collision = barrier_collisions[0]
+            collision_location = first_collision.collision.left
+            if self.pos.x < 0 and self.vel.x < 0:
+                self.pos.x = collision_location + 1
+                self.vel.x = 0
+                self.acc.x = 0
+            if collision_location != 0:
+                max_collision = collision_location
+                if self.pos.x > max_collision and self.vel.x > 0:
+                    self.pos.x = collision_location - 1
+                    self.vel.x = 0
+                    self.acc.x = 0
+            # Stop movement
+            print(first_collision.collision.left)
+
 
     def attacked(self, damage, base_knockback, knockback_direction):
         pass
