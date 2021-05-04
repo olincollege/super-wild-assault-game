@@ -153,6 +153,7 @@ class Player(SwagCollisionSprite):
         self.pos += self.vel + 0.5 * self.acc   # update position based on current vel and accel
         self.rect.midbottom = self.pos
 
+        # reset accelerations so things don't fly out of control
         self.controlled_acc.x = 0
         self.controlled_acc.y = 0
         self.knockback_acc.x = 0
