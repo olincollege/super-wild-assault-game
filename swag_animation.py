@@ -28,9 +28,9 @@ class Animation:
         
         self.__hurtboxes = {}
         self.__hitboxes = {}
+        self.get_collision_boxes()
         self.__cancelable = False
         self.__endlag = 0
-        self.get_collision_boxes()
 
     def __repr__(self):
         return f'{self.__move} frame {self.__current_frame}'
