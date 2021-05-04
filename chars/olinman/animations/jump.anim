@@ -1,17 +1,8 @@
-frame, type, x, y, xoffset, yoffset, width, height, damage, knockback, knockbackx, knockbacky, cancelable
-    0, hurt, 0, 0,       0,       0,     0,      0,      0,         0,          0,          0,      false
-    0,  hit, 0, 0,       0,       0,     0,      0,      0,         0,          0,          0,      false
-    1, hurt, 0, 0,       0,       0,     0,      0,      0,         0,          0,          0,      false
-    1,  hit, 0, 0,       0,       0,     0,      0,      0,         0,          0,          0,      false
-    2, hurt, 0, 0,       0,       0,     0,      0,      0,         0,          0,          0,      false
-    2,  hit, 0, 0,       0,       0,     0,      0,      0,         0,          0,          0,      false
-    3, hurt, 0, 0,       0,       0,     0,      0,      0,         0,          0,          0,      false
-    3,  hit, 0, 0,       0,       0,     0,      0,      0,         0,          0,          0,      false
-    4, hurt, 0, 0,       0,       0,     0,      0,      0,         0,          0,          0,      false
-    4,  hit, 0, 0,       0,       0,     0,      0,      0,         0,          0,          0,      false
-    5, hurt, 0, 0,       0,       0,     0,      0,      0,         0,          0,          0,      false
-    5,  hit, 0, 0,       0,       0,     0,      0,      0,         0,          0,          0,      false
-    6, hurt, 0, 0,       0,       0,     0,      0,      0,         0,          0,          0,      false
-    6,  hit, 0, 0,       0,       0,     0,      0,      0,         0,          0,          0,      false
-    7, hurt, 0, 0,       0,       0,     0,      0,      0,         0,          0,          0,      false
-    7,  hit, 0, 0,       0,       0,     0,      0,      0,         0,          0,          0,      false
+frame, type,  x,  y, xoffset, yoffset, width, height, damage, knockback, knockbackx, knockbacky, cancelable
+    1, hurt,  0, 28,       0,       0,    89,     85,      0,         0,          0,          0,      false
+    2, hurt,  0, 40,       0,       0,    89,     73,      0,         0,          0,          0,      false
+    3, hurt, 20,  1,       0,       0,    49,    112,      0,         0,          0,          0,       true
+    4, hurt, 20,  0,       0,       0,    49,    113,      0,         0,          0,          0,       true
+    5, hurt, 20,  0,       0,       0,    49,    113,      0,         0,          0,          0,       true
+    6, hurt, 20,  0,       0,       0,    49,    113,      0,         0,          0,          0,       true
+    7, hurt, 19,  1,       0,       0,    50,    112,      0,         0,          0,          0,       true
