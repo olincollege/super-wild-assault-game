@@ -65,12 +65,17 @@ class Player(SwagCollisionSprite):
         if action == 'left' or action == 'right':
             new_animation = 'walk'
 
+        # TODO: add "state" to animations: list of air or ground to show where the animation is
+        # allowed to play, and modify the block below to use that.
+
         # if prior move not the same and animation is ok to switch, reset animation frame then
         # change current animation
         if self._current_animation.move != new_animation and not self._locked_animation:
-            if not (new_animation == 'jump' and self._jumping):
+            if not (new_animation == 'jump' and self._jumping): # make sure you can't double jump
                 self._current_animation.reset()
                 self._current_animation = self._animations[new_animation]
+
+        # TODO: add aerial drift separate from walk animation
 
         # special cases for when the player should be moving around
         # walking:
