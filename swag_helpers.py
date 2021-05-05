@@ -28,3 +28,11 @@ class CollisionBox(NamedTuple):
     knockback_scale: float
     knockback_x: float
     knockback_y: float
+
+
+class MoveInfo(NamedTuple):
+    name: str
+    allowed_states: list
+    cancelable_start: int
+    endlag: int
+    can_move: int

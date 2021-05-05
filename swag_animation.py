@@ -4,24 +4,25 @@ from pygame import Vector2
 import csv
 from os import listdir, path
 from abc import ABC, abstractmethod
-from swag_helpers import sign, CollisionBox
+from swag_helpers import sign, CollisionBox, MoveInfo
 
 class Animation:
     REPEAT_FRAME = 5
-    def __init__(self, character: str, move: str, allowed_states: list, cancelable_start: int, endlag: int) -> None:
+    def __init__(self, character: str, move: MoveInfo) -> None:
         self.__character_path = path.join('chars', character)
+        self.__move = move
+        print(move)
 
-        self.__sprites_path = path.join(self.__character_path, 'sprites', move)
+        self.__sprites_path = path.join(self.__character_path, 'sprites', self.__move.name)
         sprite_filenames = listdir(self.__sprites_path)
         sprite_filenames = [path.join(self.__sprites_path, name) for name in sprite_filenames
                             if name[-4:] == '.png']
         sprite_filenames.sort()
         self.__sprites_list = [pygame.image.load(frame) for frame in sprite_filenames]
 
-        self.__framedata_path = path.join(self.__character_path, 'animations', f'{move}.anim')
+        self.__framedata_path = path.join(self.__character_path, 'animations', f'{self.__move.name}.anim')
 
-        self.__move = move
-        self.__endlag = endlag
+        
         self.__animation_length = len(self.__sprites_list)
 
         self.__current_frame_index = 0
@@ -29,24 +30,22 @@ class Animation:
         self.__repetition = 0
         self.__done = False
 
-        self.__allowed_states = allowed_states
         self.__hurtboxes = {}
         self.__hitboxes = {}
         self.get_collision_boxes()
-        self.__cancelable_start = cancelable_start
 
     def __repr__(self):
-        return f'{self.__move} frame {self.__current_frame_index}'
+        return f'{self.__move.name} frame {self.__current_frame_index}'
 
     @property
     def move(self) -> str:
-        return self.__move
+        return self.__move.name
 
     @property
     def cancelable(self) -> bool:
         if self.__done:
             return True
-        return self.__cancelable_start > 0 and self.__current_frame_index >= self.__cancelable_start
+        return self.__move.cancelable_start > 0 and self.__current_frame_index >= self.__move.cancelable_start
 
     @property
     def done(self) -> bool:
@@ -58,7 +57,7 @@ class Animation:
         return self.__sprites_list[self.__current_frame_index]
 
     def allowed_to_start(self, state: str) -> bool:
-        return state in self.__allowed_states
+        return state in self.__move.allowed_states
 
     def reset(self) -> None:
         self.__current_frame_index = 0
@@ -83,4 +82,4 @@ class Animation:
         if self.__current_frame_index >= self.__animation_length:
             self.__current_frame_index = self.__animation_length-1
             self.__current_lag_frame += 1
-            self.__done = self.__current_lag_frame > self.__endlag
+            self.__done = self.__current_lag_frame > self.__move.endlag

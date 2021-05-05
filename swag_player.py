@@ -8,7 +8,7 @@ from pygame import Vector2
 from swag_animation import Animation
 from swag_stage import SwagStage
 from swag_collision import SwagCollisionSprite
-from swag_helpers import sign, PlayerPhysics
+from swag_helpers import sign, PlayerPhysics, MoveInfo
 
 
 class Player(SwagCollisionSprite):
@@ -59,12 +59,9 @@ class Player(SwagCollisionSprite):
         for barrier_sprite in self._barriers:
             self._barrier_group.add(barrier_sprite)
 
-        self._animations = {move: Animation(self._character,
-                                            move,
-                                            move_info['state'],
-                                            move_info['cancelable_start'],
-                                            move_info['endlag'])
+        self._animations = {move: Animation(self._character, MoveInfo(move, **move_info))
                                             for move, move_info in self._moves.items()}
+
         self._current_animation = self._animations['idle']  # type: Animation
 
     @property

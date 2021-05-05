@@ -14,49 +14,49 @@
     },
     "moves": {
         "block": {
-            "state": ["ground"],
+            "allowed_states": ["ground"],
             "cancelable_start": 0,
             "endlag": 0,
             "can_move": false
         },
         "hit":  {
-            "state": ["ground", "air"],
+            "allowed_states": ["ground", "air"],
             "cancelable_start": 0,
             "endlag": 4,
             "can_move": true
         },
         "idle":  {
-            "state": ["ground"],
+            "allowed_states": ["ground"],
             "cancelable_start": 1,
             "endlag": 0,
             "can_move": false
         },
         "air_idle": {
-            "state": ["air"],
+            "allowed_states": ["air"],
             "cancelable_start": 1,
             "endlag": 0,
             "can_move": true
         },
         "jab":  {
-            "state": ["ground"],
+            "allowed_states": ["ground"],
             "cancelable_start": 0,
             "endlag": 1,
             "can_move": false
         },
         "jump":  {
-            "state": ["ground"],
+            "allowed_states": ["ground"],
             "cancelable_start": 0,
             "endlag": 0,
             "can_move": true
         },
         "land": {
-            "state": ["ground"],
+            "allowed_states": ["ground"],
             "cancelable_start": 0,
             "endlag": 0,
             "can_move": false
         },
         "walk":  {
-            "state": ["ground"],
+            "allowed_states": ["ground"],
             "cancelable_start": 1,
             "endlag": 0,
             "can_move": true
