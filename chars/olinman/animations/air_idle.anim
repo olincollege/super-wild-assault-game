@@ -1,3 +1,2 @@
 frame,type,x,y,xoffset,yoffset,width,height,damage,knockback,knockbackx,knockbacky
-1,hurt,30,40,0,0,48,90,0,0,0,0
-2,hurt,16,54,0,0,76,76,0,0,0,0
+1,hurt,20,0,0,0,49,113,0,0,0,0

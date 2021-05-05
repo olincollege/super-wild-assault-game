@@ -1,7 +1,4 @@
-frame, type,  x,  y, xoffset, yoffset, width, height, damage, knockback, knockbackx, knockbacky, cancelable
-    1, hurt, 16, 54,       0,       0,    76,     76,      0,         0,          0,          0,      false
-    2, hurt, 28,  4,       0,       0,    52,    126,      0,         0,          0,          0,      false
-    3, hurt, 27,  9,       0,       0,    52,    121,      0,         0,          0,          0,       true
-    4, hurt, 28,  6,       0,       0,    51,    124,      0,         0,          0,          0,       true
-    5, hurt, 30, 40,       0,       0,    48,     90,      0,         0,          0,          0,       true
-    6, hurt, 25, 48,       0,       0,    58,     82,      0,         0,          0,          0,       true
+frame,type,x,y,xoffset,yoffset,width,height,damage,knockback,knockbackx,knockbacky
+1,hurt,16,54,0,0,76,76,0,0,0,0
+2,hurt,28,4,0,0,52,126,0,0,0,0
+3,hurt,30,40,0,0,48,90,0,0,0,0
