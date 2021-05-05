@@ -1,13 +1,38 @@
 {
     "name": "Catboy",
-    "health": 100,
-    "ground_accel": 0.3,
-    "ground_speed": 3,
-    "air_accel": 0.3,
-    "air_speed": 3,
-    "weight": 1,
-    "gravity": 0.5,
-    "fall_speed": 3,
-    "jump_accel": -10,
-    "traction": 0.2
+    "physics": {
+        "health": 100,
+        "ground_accel": 0.3,
+        "ground_speed": 3,
+        "air_accel": 0.3,
+        "air_speed": 3,
+        "weight": 1,
+        "gravity": 0.5,
+        "fall_speed": 3,
+        "jump_accel": -10,
+        "traction": 0.2
+    },
+        "moves": {
+        "block": {
+            "state": ["ground"]
+        },
+        "hit":  {
+            "state": ["ground", "air"]
+        },
+        "idle":  {
+            "state": ["ground"]
+        },
+        "jab":  {
+            "state": ["ground"]
+        },
+        "jump":  {
+            "state": ["ground"]
+        },
+        "land": {
+            "state": ["ground"]
+        },
+        "walk":  {
+            "state": ["ground"]
+        }
+    }
 }
