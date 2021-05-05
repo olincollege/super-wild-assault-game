@@ -9,6 +9,7 @@ from pygame.locals import *     # type: ignore  pylint: disable=wildcard-import
 from swag_player import Player
 from swag_view import PygameView
 from swag_input_handler import PygameInput
+#from swag_healthbar import SwagHealthBar
 
 
 if __name__ == '__main__':
