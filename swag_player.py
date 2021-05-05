@@ -30,9 +30,12 @@ class Player(SwagCollisionSprite):
             f'{character}_idle-1.png'))
         self.rect = self.surf.get_rect(center = (500, 250))
 
-        # import physics properties from file
+        # import character properties from file
         with open(os.path.join('chars', character, f'{character}.info'), 'r') as info_file:
-            self._properties = PlayerProperties(**(json.load(info_file)))
+            prop_dict = json.load(info_file)
+            self._name = prop_dict['name']
+            self._physics = PlayerPhysics(**(prop_dict['physics']))
+            self._moves = prop_dict['moves']
 
         self.pos = Vector2((500,500))
         self.vel = Vector2(0,0)
@@ -54,8 +57,7 @@ class Player(SwagCollisionSprite):
         for barrier_sprite in self._barriers:
             self._barrier_group.add(barrier_sprite)
 
-        self.moves = ['block','hit','idle','jab','jump','land', 'walk']
-        self._animations = {move: Animation(self._character, move) for move in self.moves}
+        self._animations = {move: Animation(self._character, move) for move in self._moves}
         self._current_animation = self._animations['idle']  # type: Animation
 
     @property
@@ -89,11 +91,11 @@ class Player(SwagCollisionSprite):
         if self._current_animation.move == 'walk':
             self._is_walking = True
             if action == 'left':
-                self.controlled_acc.x = -self._properties.ground_accel
+                self.controlled_acc.x = -self._physics.ground_accel
                 if not self._facing_left:
                     self._facing_left = True
             if action == 'right':
-                self.controlled_acc.x = self._properties.ground_accel
+                self.controlled_acc.x = self._physics.ground_accel
                 if self._facing_left:
                     self._facing_left = False
         else:
@@ -102,7 +104,7 @@ class Player(SwagCollisionSprite):
         # jumping:
         if self._current_animation.move == 'jump' and not self._jumping:
             self._jumping = True
-            self.controlled_acc.y = self._properties.jump_accel
+            self.controlled_acc.y = self._physics.jump_accel
 
     def update(self):
         sign = lambda x : copysign(1, x)
@@ -111,9 +113,9 @@ class Player(SwagCollisionSprite):
         friction_acc = 0
         if not self.controlled_acc.x:
             if self._stage_collision():
-                friction_acc = self._properties.traction * -sign(self.vel.x) * (abs(self.vel.x) > 0)
+                friction_acc = self._physics.traction * -sign(self.vel.x) * (abs(self.vel.x) > 0)
             else:
-                friction_acc = self._properties.air_accel * -sign(self.vel.x) * (abs(self.vel.x) > 0)
+                friction_acc = self._physics.air_accel * -sign(self.vel.x) * (abs(self.vel.x) > 0)
 
         self.acc.x += friction_acc
 
@@ -122,15 +124,15 @@ class Player(SwagCollisionSprite):
             self.controlled_acc.x *= .2
             self.controlled_acc.y *= .2
         self.acc.y += self.controlled_acc.y     # jump accel, DI
-        self.acc.y += self._properties.gravity  # fall acceleration
+        self.acc.y += self._physics.gravity  # fall acceleration
         self.acc += self.knockback_acc          # knockback
         self.acc.x += self.controlled_acc.x     # walk accel, DI
 
         self.vel += self.acc    # update velocity
 
         # apply ground speed cap
-        if abs(self.vel.x) > self._properties.ground_speed and self._is_walking:
-            self.vel.x = self._properties.ground_speed * sign(self.vel.x)
+        if abs(self.vel.x) > self._physics.ground_speed and self._is_walking:
+            self.vel.x = self._physics.ground_speed * sign(self.vel.x)
 
         # stop the player if their speed is below a threshold
         if abs(self.vel.x) < .3:
@@ -200,8 +202,7 @@ class Player(SwagCollisionSprite):
         pass
 
 
-class PlayerProperties(NamedTuple):
-    name: str
+class PlayerPhysics(NamedTuple):
     health: int
     ground_accel: float
     ground_speed: float
