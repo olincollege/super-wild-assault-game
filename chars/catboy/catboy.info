@@ -12,7 +12,7 @@
         "jump_accel": -10,
         "traction": 0.2
     },
-        "moves": {
+    "moves": {
         "block": {
             "state": ["ground"]
         },
