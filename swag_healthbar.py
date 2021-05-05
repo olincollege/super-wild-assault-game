@@ -5,14 +5,13 @@ import pygame, sys
 from math import ceil
 
 class SwagHealthBar(pygame.sprite.Sprite):
-    def __init__(self, healthbar_x,healthbar_y,horizontal_flip):
+    def __init__(self, player: Player,healthbar_x,healthbar_y,horizontal_flip):
         super().__init__()
         self.healthbar_x = healthbar_x
         self.healthbar_y = healthbar_y
         self.horizontal_flip = horizontal_flip
-        self.image = pygame.Surface((40,40))
-        self.image.fill((200,30,30))
-        self.rect = self.image.get_rect(center = (500,250))
+        self.image = player.surf # sprite
+        self.rect = player.rect
         self.max_health = 1000
         self.target_health = self.max_health
         self.current_health = self.max_health
