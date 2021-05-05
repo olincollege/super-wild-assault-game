@@ -1,5 +1,6 @@
 from math import copysign
 from typing import NamedTuple
+from pygame import Rect
 
 def sign(number) -> float:
     return copysign(1, number)
@@ -28,6 +29,7 @@ class CollisionBox(NamedTuple):
     knockback_scale: float
     knockback_x: float
     knockback_y: float
+    rect: Rect
 
 
 class MoveInfo(NamedTuple):

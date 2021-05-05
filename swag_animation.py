@@ -11,7 +11,6 @@ class Animation:
     def __init__(self, character: str, move: MoveInfo) -> None:
         self.__character_path = path.join('chars', character)
         self.__move = move
-        print(move)
 
         self.__sprites_path = path.join(self.__character_path, 'sprites', self.__move.name)
         sprite_filenames = listdir(self.__sprites_path)
@@ -51,6 +50,20 @@ class Animation:
     def done(self) -> bool:
         return self.__done
 
+    @property
+    def current_hitboxes(self) -> list:
+        try:
+            return self.__hitboxes[self.__current_frame_index+1]
+        except KeyError:
+            return [CollisionBox(0,0,0,0,0,0,0,0,0,0,(0,0,0,0))]
+
+    @property
+    def current_hurtboxes(self) -> list:
+        try:
+            return self.__hurtboxes[self.__current_frame_index+1]
+        except KeyError:
+            return [CollisionBox(0,0,0,0,0,0,0,0,0,0,(0,0,0,0))]
+
     def get_current_frame(self) -> pygame.Surface:
         if self.__current_lag_frame > 0:
             return self.__sprites_list[-1]
@@ -70,9 +83,17 @@ class Animation:
                 reader = csv.reader(framedata_file, skipinitialspace=True)
                 for row in reader:
                     if row[1] == 'hurt':
-                        self.__hurtboxes[row[0]] = CollisionBox(*row[2:])
+                        coords = (int(row[2]), int(row[3]), int(row[6]), int(row[7]))
+                        try:
+                            self.__hurtboxes[int(row[0])].append(CollisionBox(*row[2:], pygame.Rect(coords)))
+                        except KeyError:
+                            self.__hurtboxes[int(row[0])] = [CollisionBox(*row[2:], pygame.Rect(coords))]
                     elif row[1] == 'hit':
-                        self.__hitboxes[row[0]] = CollisionBox(*row[2:])
+                        coords = (int(row[2]), int(row[3]), int(row[6]), int(row[7]))
+                        try:
+                            self.__hitboxes[int(row[0])].append(CollisionBox(*row[2:], pygame.Rect(coords)))
+                        except KeyError:
+                            self.__hitboxes[int(row[0])] = [CollisionBox(*row[2:], pygame.Rect(coords))]
 
     def update_frame(self) -> pygame.Surface:
         self.__repetition += 1

@@ -2,7 +2,7 @@
 The model for SWAG. Contains the information about the game "scene", which is the environment around the players. 
 '''
 import pygame
-from swag_collision import SwagCollisionSprite
+from swag_collisionsprite import SwagCollisionSprite
 from math import ceil
 
 class SwagStage(SwagCollisionSprite):

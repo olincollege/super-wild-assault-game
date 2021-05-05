@@ -7,7 +7,7 @@ import json
 from pygame import Vector2
 from swag_animation import Animation
 from swag_stage import SwagStage
-from swag_collision import SwagCollisionSprite
+from swag_collisionsprite import SwagCollisionSprite
 from swag_helpers import sign, PlayerPhysics, MoveInfo
 
 
@@ -67,6 +67,10 @@ class Player(SwagCollisionSprite):
     @property
     def player_number(self) -> int:
         return self._player_number
+
+    @property
+    def current_animation(self) -> Animation:
+        return self._current_animation
 
     def switch_animation(self, animation_name: str) -> None:
         self._current_animation.reset()
@@ -210,6 +214,7 @@ class Player(SwagCollisionSprite):
     def attacked(self, damage: int, base_knockback: float, knockback_direction: Vector2) -> None:
         if self._health > 0:
             self._health -= damage
+            print(f'player {self._player_number}self._health: {self._health}')
         if self._health < 0:
             self._health = 0
 
