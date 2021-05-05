@@ -8,7 +8,7 @@ from swag_helpers import sign, CollisionBox
 
 class Animation:
     REPEAT_FRAME = 5
-    def __init__(self, character: str, move: str, allowed_states: list, cancelable_start: int, endlag: int, end_callback=None) -> None:
+    def __init__(self, character: str, move: str, allowed_states: list, cancelable_start: int, endlag: int) -> None:
         self.__character_path = path.join('chars', character)
 
         self.__sprites_path = path.join(self.__character_path, 'sprites', move)
@@ -29,7 +29,6 @@ class Animation:
         self.__repetition = 0
         self.__done = False
 
-        self.__end_callback = end_callback
         self.__allowed_states = allowed_states
         self.__hurtboxes = {}
         self.__hitboxes = {}
