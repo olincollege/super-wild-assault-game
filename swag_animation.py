@@ -4,9 +4,9 @@ from pygame import Vector2
 import csv
 from os import listdir, path
 from abc import ABC, abstractmethod
+from swag_helpers import sign, CollisionBox
 
 class Animation:
-    
     REPEAT_FRAME = 5
     def __init__(self, character: str, move: str, allowed_states: list, cancelable_start: int, endlag: int, end_callback=None) -> None:
         self.__character_path = path.join('chars', character)
@@ -85,16 +85,3 @@ class Animation:
             self.__current_frame_index = self.__animation_length-1
             self.__current_lag_frame += 1
             self.__done = self.__current_lag_frame > self.__endlag
-
-
-class CollisionBox(NamedTuple):
-    x: int
-    y: int
-    xoffset: int
-    yoffset: int
-    width: int
-    height: int
-    damage: int
-    knockback_scale: float
-    knockback_x: float
-    knockback_y: float
