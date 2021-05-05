@@ -8,7 +8,7 @@ from abc import ABC, abstractmethod
 class Animation:
     
     REPEAT_FRAME = 5
-    def __init__(self, character: str, move: str) -> None:
+    def __init__(self, character: str, move: str, allowed_states: list, cancelable_start: int, endlag: int, end_callback=None) -> None:
         self.__character_path = path.join('chars', character)
 
         self.__sprites_path = path.join(self.__character_path, 'sprites', move)
@@ -21,19 +21,23 @@ class Animation:
         self.__framedata_path = path.join(self.__character_path, 'animations', f'{move}.anim')
 
         self.__move = move
+        self.__endlag = endlag
         self.__animation_length = len(self.__sprites_list)
 
-        self.__current_frame = 0
+        self.__current_frame_index = 0
+        self.__current_lag_frame = 0
         self.__repetition = 0
-        
+        self.__done = False
+
+        self.__end_callback = end_callback
+        self.__allowed_states = allowed_states
         self.__hurtboxes = {}
         self.__hitboxes = {}
         self.get_collision_boxes()
-        self.__cancelable = False
-        self.__endlag = 0
+        self.__cancelable_start = cancelable_start
 
     def __repr__(self):
-        return f'{self.__move} frame {self.__current_frame}'
+        return f'{self.__move} frame {self.__current_frame_index}'
 
     @property
     def move(self) -> str:
@@ -41,13 +45,28 @@ class Animation:
 
     @property
     def cancelable(self) -> bool:
-        return self.__cancelable
+        if self.__done:
+            return True
+        return self.__cancelable_start > 0 and self.__current_frame_index >= self.__cancelable_start
+
+    @property
+    def done(self) -> bool:
+        return self.__done
+
+    def get_current_frame(self) -> pygame.Surface:
+        if self.__current_lag_frame > 0:
+            return self.__sprites_list[-1]
+        return self.__sprites_list[self.__current_frame_index]
+
+    def allowed_to_start(self, state: str) -> bool:
+        return state in self.__allowed_states
 
     def reset(self) -> None:
-        self.__current_frame = 0
+        self.__current_frame_index = 0
+        self.__current_lag_frame = 0
+        self.__done = False
 
     def get_collision_boxes(self) -> None:
-        framedata = []
         if path.isfile(self.__framedata_path):
             with open(self.__framedata_path, newline='') as framedata_file:
                 reader = csv.reader(framedata_file, skipinitialspace=True)
@@ -60,14 +79,12 @@ class Animation:
     def update_frame(self) -> pygame.Surface:
         self.__repetition += 1
         if self.__repetition >= self.REPEAT_FRAME:
-            self.__current_frame += 1
+            self.__current_frame_index += 1
             self.__repetition = 0
-        if self.__current_frame > self.__animation_length-1:
-            self.__current_frame = 0
-            # if self.__end_callback:
-            #     self.__end_callback()
-            #     return self.__sprites_list[-1]
-        return self.__sprites_list[self.__current_frame]
+        if self.__current_frame_index >= self.__animation_length:
+            self.__current_frame_index = self.__animation_length-1
+            self.__current_lag_frame += 1
+            self.__done = self.__current_lag_frame > self.__endlag
 
 
 class CollisionBox(NamedTuple):
@@ -81,4 +98,3 @@ class CollisionBox(NamedTuple):
     knockback_scale: float
     knockback_x: float
     knockback_y: float
-    cancelable: bool

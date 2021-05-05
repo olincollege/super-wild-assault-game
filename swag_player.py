@@ -2,7 +2,7 @@
 docstring moment
 '''
 import os
-from math import copysign
+from math import copysign, ceil
 import pygame
 import json
 from typing import NamedTuple
@@ -17,6 +17,9 @@ def hitbox_collision(sprite1, sprite2):
     '''
     return sprite1.collision.colliderect(sprite2.collision)
 
+def sign(number):
+    return copysign(1, number)
+
 class Player(SwagCollisionSprite):
 
     def __init__(self, player_number: int, character: str, stage: SwagStage, barriers: list) -> None:
@@ -28,26 +31,34 @@ class Player(SwagCollisionSprite):
         self._player_number = player_number
         self.surf = pygame.image.load(os.path.join('chars', character, 'sprites', 'idle',
             f'{character}_idle-1.png'))
-        self.rect = self.surf.get_rect(center = (500, 250))
+        
+        # set up starting location
+        if self._player_number == 1:
+            self.rect = self.surf.get_rect(center = (750, 250))
+            self.pos = Vector2((750,250))
+            self._facing_left = True
+        elif self._player_number == 2:
+            self.rect = self.surf.get_rect(center = (250, 250))
+            self.pos = Vector2((250,250))
+            self._facing_left = False
 
         # import character properties from file
         with open(os.path.join('chars', character, f'{character}.info'), 'r') as info_file:
             prop_dict = json.load(info_file)
             self._name = prop_dict['name']
+            self._health = prop_dict['health']
             self._physics = PlayerPhysics(**(prop_dict['physics']))
             self._moves = prop_dict['moves']
 
-        self.pos = Vector2((500,500))
+
         self.vel = Vector2(0,0)
         self.acc = Vector2(0,0)
         self.knockback_acc = Vector2(0,0)
         self.controlled_acc = Vector2(0,0)
-        self._facing_left = False
         self._flip = False
 
         self._hitstun = False
-        self._locked_animation = False
-        self._is_walking = False
+        self._in_air = True
 
         # stage collisions
         self._stage_group = pygame.sprite.Group()
@@ -57,62 +68,64 @@ class Player(SwagCollisionSprite):
         for barrier_sprite in self._barriers:
             self._barrier_group.add(barrier_sprite)
 
-        self._animations = {move: Animation(self._character, move) for move in self._moves}
+        self._animations = {move: Animation(self._character,
+                                            move,
+                                            move_info['state'],
+                                            move_info['cancelable_start'],
+                                            move_info['endlag'])
+                                            for move, move_info in self._moves.items()}
         self._current_animation = self._animations['idle']  # type: Animation
 
     @property
     def player_number(self):
         return self._player_number
 
-    def start_idle(self):
+    def switch_animation(self, animation_name: str):
         self._current_animation.reset()
-        self._current_animation = self._animations['idle']
+        self._current_animation = self._animations[animation_name]
 
     def action(self, action):
         # determine which animation is being asked for
         new_animation = action
         if action == 'left' or action == 'right':
-            new_animation = 'walk'
-
-        # TODO: add "state" to animations: list of air or ground to show where the animation is
-        # allowed to play, and modify the block below to use that.
-
+            if self._in_air:
+                new_animation = 'air_idle'
+            else:
+                new_animation = 'walk'
+        if action == 'idle' and self._in_air:
+            new_animation = 'air_idle'
         # if prior move not the same and animation is ok to switch, reset animation frame then
         # change current animation
-        if self._current_animation.move != new_animation and not self._locked_animation:
-            if not (new_animation == 'jump' and self._jumping): # make sure you can't double jump
-                self._current_animation.reset()
-                self._current_animation = self._animations[new_animation]
+        if self._current_animation.done or (self._current_animation.cancelable and self._current_animation.move != new_animation):
+            state = 'ground'
+            if self._in_air:
+                state = 'air'
+            if self._animations[new_animation].allowed_to_start(state):
+                self.switch_animation(new_animation)
 
-        # TODO: add aerial drift separate from walk animation
+        # set facing
+        if action == 'left':
+            self._facing_left = True
+        elif action == 'right':
+            self._facing_left = False
 
         # special cases for when the player should be moving around
-        # walking:
-        if self._current_animation.move == 'walk':
-            self._is_walking = True
-            if action == 'left':
-                self.controlled_acc.x = -self._physics.ground_accel
-                if not self._facing_left:
-                    self._facing_left = True
-            if action == 'right':
-                self.controlled_acc.x = self._physics.ground_accel
-                if self._facing_left:
-                    self._facing_left = False
-        else:
-            self._is_walking = False
-        
+        # left/right:
+        if (action == 'left' or action == 'right') and self._moves[self._current_animation.move]['can_move']:
+            if self._in_air:
+                self.controlled_acc.x = sign(-1*self._facing_left) * self._physics.air_accel
+            else:
+                self.controlled_acc.x = sign(-1*self._facing_left) * self._physics.ground_accel
+
         # jumping:
-        if self._current_animation.move == 'jump' and not self._jumping:
-            self._jumping = True
+        if self._current_animation.move == 'jump' and not self._in_air:
             self.controlled_acc.y = self._physics.jump_accel
 
     def update(self):
-        sign = lambda x : copysign(1, x)
-
         # add appropriate resistive force depending on whether or not the player is on the ground
         friction_acc = 0
         if not self.controlled_acc.x:
-            if self._stage_collision():
+            if not self._in_air:
                 friction_acc = self._physics.traction * -sign(self.vel.x) * (abs(self.vel.x) > 0)
             else:
                 friction_acc = self._physics.air_accel * -sign(self.vel.x) * (abs(self.vel.x) > 0)
@@ -130,16 +143,19 @@ class Player(SwagCollisionSprite):
 
         self.vel += self.acc    # update velocity
 
-        # apply ground speed cap
-        if abs(self.vel.x) > self._physics.ground_speed and self._is_walking:
+        # apply ground and air speed cap
+        if abs(self.vel.x) > self._physics.ground_speed and not self._in_air:
             self.vel.x = self._physics.ground_speed * sign(self.vel.x)
+        if abs(self.vel.x) > self._physics.air_speed and self._in_air:
+            self.vel.x = self._physics.air_speed * sign(self.vel.x)
 
         # stop the player if their speed is below a threshold
         if abs(self.vel.x) < .3:
             self.vel.x = 0
 
         # update the sprite and bounding box for the current animation
-        self.surf = self._current_animation.update_frame()
+        self._current_animation.update_frame()
+        self.surf = self._current_animation.get_current_frame()
         self.rect = self.surf.get_rect(center = (self.pos.x, self.pos.y))
         # mirror the sprite horizontally if the player is facing left
         if self._facing_left:
@@ -151,6 +167,11 @@ class Player(SwagCollisionSprite):
         self.pos += self.vel + 0.5 * self.acc   # update position based on current vel and accel
         self.rect.midbottom = self.pos
 
+        if self._stage_collision():
+            self._in_air = False
+        else:
+            self._in_air = True
+
         # reset accelerations so things don't fly out of control
         self.controlled_acc.x = 0
         self.controlled_acc.y = 0
@@ -158,6 +179,9 @@ class Player(SwagCollisionSprite):
         self.knockback_acc.x = 0
         self.acc.x = 0
         self.acc.y = 0
+
+        # control health bar
+        # self.advanced_health()
 
     def _stage_collision(self):
         return pygame.sprite.spritecollide(self, self._stage_group, False, collided=hitbox_collision)
@@ -172,12 +196,12 @@ class Player(SwagCollisionSprite):
                     self.pos.y = lowest.collision.top + 1
                     self.vel.y = 0
                     self.acc.y = 0
-                    self._jumping = False
-                    self._locked_animation = False # fix later
+                    if self._in_air:
+                        self.switch_animation('land')
+                    self._in_air = False
 
     def _barrier_collision(self):
         return pygame.sprite.spritecollide(self, self._barrier_group, False, collided=hitbox_collision)
-
     
     def _barrier_collision_check(self):
         barrier_collisions = self._barrier_collision()
@@ -194,16 +218,28 @@ class Player(SwagCollisionSprite):
                     self.pos.x = collision_location - 1
                     self.vel.x = 0
                     self.acc.x = 0
-            # Stop movement
-            print(first_collision.collision.left)
-
 
     def attacked(self, damage, base_knockback, knockback_direction):
-        pass
+        if self._health > 0:
+            self._health -= damage
+        if self._health < 0:
+            self._health = 0
+
+    def advanced_health(self):
+    # controlling the health bar
+        transition_width = 0
+        transition_color = (255,0,0)
+        if self.current_health > self._health:
+            self.current_health -= self.health_change_speed
+            transition_width = -ceil((self._health - self.current_health) / self.health_ratio)
+            transition_color = (255,255,0)
+
+        health_bar_width = int(self.health / self.health_ratio)
+        #health_bar = pygame.Rect(10,45,health_bar_width,25)
+        #transition_bar = pygame.Rect(health_bar.right,45,transition_width,25)
 
 
 class PlayerPhysics(NamedTuple):
-    health: int
     ground_accel: float
     ground_speed: float
     air_accel: float
