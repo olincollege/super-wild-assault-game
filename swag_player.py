@@ -2,23 +2,14 @@
 docstring moment
 '''
 import os
-from math import copysign, ceil
 import pygame
 import json
-from typing import NamedTuple
 from pygame import Vector2
 from swag_animation import Animation
 from swag_stage import SwagStage
 from swag_collision import SwagCollisionSprite
+from swag_helpers import sign, PlayerPhysics
 
-def hitbox_collision(sprite1, sprite2):
-    '''
-    Check if two hitboxes collide
-    '''
-    return sprite1.collision.colliderect(sprite2.collision)
-
-def sign(number):
-    return copysign(1, number)
 
 class Player(SwagCollisionSprite):
 
@@ -77,14 +68,14 @@ class Player(SwagCollisionSprite):
         self._current_animation = self._animations['idle']  # type: Animation
 
     @property
-    def player_number(self):
+    def player_number(self) -> int:
         return self._player_number
 
-    def switch_animation(self, animation_name: str):
+    def switch_animation(self, animation_name: str) -> None:
         self._current_animation.reset()
         self._current_animation = self._animations[animation_name]
 
-    def action(self, action):
+    def action(self, action: str) -> None:
         # determine which animation is being asked for
         new_animation = action
         if action == 'left' or action == 'right':
@@ -121,7 +112,7 @@ class Player(SwagCollisionSprite):
         if self._current_animation.move == 'jump' and not self._in_air:
             self.controlled_acc.y = self._physics.jump_accel
 
-    def update(self):
+    def update(self) -> None:
         # add appropriate resistive force depending on whether or not the player is on the ground
         friction_acc = 0
         if not self.controlled_acc.x:
@@ -183,10 +174,10 @@ class Player(SwagCollisionSprite):
         # control health bar
         # self.advanced_health()
 
-    def _stage_collision(self):
+    def _stage_collision(self) -> list:
         return pygame.sprite.spritecollide(self, self._stage_group, False, collided=hitbox_collision)
 
-    def _stage_collision_check(self):
+    def _stage_collision_check(self) -> None:
         stage_collisions = self._stage_collision()
         if self.vel.y > 0:
             if stage_collisions:
@@ -200,10 +191,10 @@ class Player(SwagCollisionSprite):
                         self.switch_animation('land')
                     self._in_air = False
 
-    def _barrier_collision(self):
+    def _barrier_collision(self) -> list:
         return pygame.sprite.spritecollide(self, self._barrier_group, False, collided=hitbox_collision)
     
-    def _barrier_collision_check(self):
+    def _barrier_collision_check(self) -> None:
         barrier_collisions = self._barrier_collision()
         if barrier_collisions:
             first_collision = barrier_collisions[0]
@@ -219,33 +210,15 @@ class Player(SwagCollisionSprite):
                     self.vel.x = 0
                     self.acc.x = 0
 
-    def attacked(self, damage, base_knockback, knockback_direction):
+    def attacked(self, damage: int, base_knockback: float, knockback_direction: Vector2) -> None:
         if self._health > 0:
             self._health -= damage
         if self._health < 0:
             self._health = 0
 
-    def advanced_health(self):
-    # controlling the health bar
-        transition_width = 0
-        transition_color = (255,0,0)
-        if self.current_health > self._health:
-            self.current_health -= self.health_change_speed
-            transition_width = -ceil((self._health - self.current_health) / self.health_ratio)
-            transition_color = (255,255,0)
 
-        health_bar_width = int(self.health / self.health_ratio)
-        #health_bar = pygame.Rect(10,45,health_bar_width,25)
-        #transition_bar = pygame.Rect(health_bar.right,45,transition_width,25)
-
-
-class PlayerPhysics(NamedTuple):
-    ground_accel: float
-    ground_speed: float
-    air_accel: float
-    air_speed: float
-    weight: float
-    gravity: float
-    fall_speed: float
-    jump_accel: float
-    traction: float
+def hitbox_collision(sprite1: SwagCollisionSprite, sprite2: SwagCollisionSprite) -> bool:
+    '''
+    Check if two hitboxes collide
+    '''
+    return sprite1.collision.colliderect(sprite2.collision)
