@@ -7,7 +7,7 @@ from swag_stage import SwagStage, SwagBarriers
 from swag_player import Player
 from pygame import Rect, Vector2
 from swag_collisionsprite import SwagCollisionSprite
-from swag_helpers import CollisionBox
+from swag_helpers import CollisionBox, sign
 
 class HitDetector:
     def __init__(self, players: Tuple[Player, Player]):
@@ -40,7 +40,7 @@ class HitDetector:
                     collision_box = player_collision_boxes[hit_player_num]['hit'][collision]
                     self.__players[hurt_player.player_number-1].attacked(collision_box.damage,
                         collision_box.knockback_scale,
-                        Vector2(collision_box.knockback_x, collision_box.knockback_y))
+                        Vector2(sign(-1*self.__players[hit_player_num-1]._facing_left)*abs(collision_box.knockback_x), collision_box.knockback_y))
 
     def _hitbox_collision(self, sprite1: SwagCollisionSprite, sprite2: SwagCollisionSprite) -> bool:
         '''
