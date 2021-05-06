@@ -212,11 +212,15 @@ class Player(SwagCollisionSprite):
                     self.acc.x = 0
 
     def attacked(self, damage: int, base_knockback: float, knockback_direction: Vector2) -> None:
-        if self._health > 0:
-            self._health -= damage
-            print(f'player {self._player_number}self._health: {self._health}')
-        if self._health < 0:
-            self._health = 0
+        if self.current_animation.move != 'hit':
+            self.switch_animation('hit')
+            self.acc.y += knockback_direction.y
+            self.acc.x += knockback_direction.x
+            if self._health > 0:
+                self._health -= damage
+                print(f'player {self._player_number}self._health: {self._health}')
+            if self._health < 0:
+                self._health = 0
 
 
 def hitbox_collision(sprite1: SwagCollisionSprite, sprite2: SwagCollisionSprite) -> bool:
