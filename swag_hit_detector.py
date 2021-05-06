@@ -9,19 +9,10 @@ from pygame import Rect, Vector2
 from swag_collisionsprite import SwagCollisionSprite
 from swag_helpers import CollisionBox
 
-class CollisionHandler:
-    def __init__(self, stage: SwagStage, barriers: list, players: Tuple[Player, Player]):
-        self.__stage = stage
-        self.__barriers = barriers
+class HitDetector:
+    def __init__(self, players: Tuple[Player, Player]):
         self.__players = players
         self.__disp = disp
-
-        self._stage_group = pygame.sprite.Group()
-        self._stage_group.add(self.__stage)
-
-        self._barrier_group = pygame.sprite.Group()
-        for barrier_sprite in self.__barriers:
-            self._barrier_group.add(barrier_sprite)
 
     def player_collision(self):
         player_collision_boxes = {}

@@ -9,7 +9,7 @@ from pygame.locals import *     # type: ignore  pylint: disable=wildcard-import
 from swag_player import Player
 from swag_view import PygameView
 from swag_input_handler import PygameInput
-from swag_collision import CollisionHandler
+from swag_hit_detector import HitDetector
 #from swag_healthbar import SwagHealthBar
 
 
@@ -32,7 +32,7 @@ if __name__ == '__main__':
 
     # create view
     VIEW = PygameView(BACKGROUND,STAGE,LEFT_BARRIER,RIGHT_BARRIER, P1, P2)
-    collision_handler = CollisionHandler(STAGE, BARRIER_SPRITES, (P1, P2))
+    HIT_DETECTOR = HitDetector((P1, P2))
 
     CONTROLLERS = [PygameInput(P1), PygameInput(P2)]
 
@@ -53,7 +53,7 @@ if __name__ == '__main__':
         for controller in CONTROLLERS:
             controller.poll_input()
         # check collisions then update p1 and p2
-        collision_handler.player_collision()
+        HIT_DETECTOR.player_collision()
         P1.update()
         P2.update()
         VIEW.draw()
