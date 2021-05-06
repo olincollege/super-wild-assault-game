@@ -82,18 +82,20 @@ class Animation:
             with open(self.__framedata_path, newline='') as framedata_file:
                 reader = csv.reader(framedata_file, skipinitialspace=True)
                 for row in reader:
-                    if row[1] == 'hurt':
-                        coords = (int(row[2]), int(row[3]), int(row[6]), int(row[7]))
-                        try:
-                            self.__hurtboxes[int(row[0])].append(CollisionBox(*row[2:], pygame.Rect(coords)))
-                        except KeyError:
-                            self.__hurtboxes[int(row[0])] = [CollisionBox(*row[2:], pygame.Rect(coords))]
-                    elif row[1] == 'hit':
-                        coords = (int(row[2]), int(row[3]), int(row[6]), int(row[7]))
-                        try:
-                            self.__hitboxes[int(row[0])].append(CollisionBox(*row[2:], pygame.Rect(coords)))
-                        except KeyError:
-                            self.__hitboxes[int(row[0])] = [CollisionBox(*row[2:], pygame.Rect(coords))]
+                    if row[0] != 'frame':
+                        row_ints = [int(element) for element in row[2:]]
+                        coords = (row_ints[0], row_ints[1], row_ints[4], row_ints[5])
+                        box = CollisionBox(*row_ints, pygame.Rect(coords))
+                        if row[1] == 'hurt':
+                            try:
+                                self.__hurtboxes[int(row[0])].append(box)
+                            except KeyError:
+                                self.__hurtboxes[int(row[0])] = [box]
+                        elif row[1] == 'hit':
+                            try:
+                                self.__hitboxes[int(row[0])].append(box)
+                            except KeyError:
+                                self.__hitboxes[int(row[0])] = [box]
 
     def update_frame(self) -> pygame.Surface:
         self.__repetition += 1
