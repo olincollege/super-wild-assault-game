@@ -12,7 +12,6 @@ from swag_helpers import CollisionBox
 class HitDetector:
     def __init__(self, players: Tuple[Player, Player]):
         self.__players = players
-        self.__disp = disp
 
     def player_collision(self):
         player_collision_boxes = {}
