@@ -7,12 +7,14 @@ from swag_stage import SwagStage, SwagBarriers
 from swag_player import Player
 from pygame import Rect, Vector2
 from swag_collisionsprite import SwagCollisionSprite
+from swag_helpers import CollisionBox
 
 class CollisionHandler:
     def __init__(self, stage: SwagStage, barriers: list, players: Tuple[Player, Player]):
         self.__stage = stage
         self.__barriers = barriers
         self.__players = players
+        self.__disp = disp
 
         self._stage_group = pygame.sprite.Group()
         self._stage_group.add(self.__stage)
@@ -22,26 +24,33 @@ class CollisionHandler:
             self._barrier_group.add(barrier_sprite)
 
     def player_collision(self):
+        player_collision_boxes = {}
+        for player in self.__players:
+            collision_boxes = {'hurt': [CollisionBox(*tuple(box)) for box in player.current_animation.current_hurtboxes],
+                                'hit': [CollisionBox(*tuple(box)) for box in player.current_animation.current_hitboxes]}
+            for box_type in collision_boxes:
+                for index in range(len(collision_boxes[box_type])):
+                    collision_rect = collision_boxes[box_type][index].rect.move(player.rect.x, player.rect.y)
+                    if player._facing_left:
+                        collision_rect.move_ip(
+                            -2*abs(collision_rect.right-player.pos.x)+collision_rect.w,0)
+                    collision_boxes[box_type][index] = collision_boxes[box_type][index]._replace(rect=collision_rect)
+            player_collision_boxes[player.player_number] = collision_boxes
 
-        player_hurtboxes = {player.player_number: player.current_animation.current_hurtboxes
-                            for player in self.__players}
-        player_hitboxes = {player.player_number: player.current_animation.current_hitboxes
-                            for player in self.__players}
-        # print(player_hurtboxes)
-        # print(player_hitboxes)
-        # tuple(Rect(hurtbox.x, hurtbox.y, hurtbox.width, hurtbox.height))
+        for hurt_player in self.__players:
+            for hurtbox in player_collision_boxes[hurt_player.player_number]['hurt']:
+                hit_player_num = 1
+                if hurt_player.player_number == 1:
+                    hit_player_num = 2
+                
+                hurt_rect = hurtbox.rect
 
-        # check if player 2 hit player 1 
-        for hurtbox in player_hurtboxes[1]:
-            # print(hurtbox)
-            collision = hurtbox.rect.collidelist([hitbox.rect for hitbox in player_hitboxes[2]])
-            if collision != -1:
-                collision_box = player_hitboxes[2][collision]
-                self.__players[0].attacked(collision_box.damage, collision_box.knockback_scale, Vector2(collision_box.knockback_x, collision_box.knockback_y))
-
-        # iterate through player's hurtboxes
-        #   if hurtbox collides with other player's hitbox, apply knockback and damage corresponding to hitbox
-
+                collision = hurt_rect.collidelist([hitbox.rect for hitbox in player_collision_boxes[hit_player_num]['hit']])
+                if collision != -1:
+                    collision_box = player_collision_boxes[hit_player_num]['hit'][collision]
+                    self.__players[hurt_player.player_number-1].attacked(collision_box.damage,
+                        collision_box.knockback_scale,
+                        Vector2(collision_box.knockback_x, collision_box.knockback_y))
 
     def _hitbox_collision(self, sprite1: SwagCollisionSprite, sprite2: SwagCollisionSprite) -> bool:
         '''
