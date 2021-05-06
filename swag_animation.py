@@ -55,14 +55,14 @@ class Animation:
         try:
             return self.__hitboxes[self.__current_frame_index+1]
         except KeyError:
-            return [CollisionBox(0,0,0,0,0,0,0,0,0,0,(0,0,0,0))]
+            return [CollisionBox(0,0,0,0,0,0,0,0,0,0,pygame.Rect(0,0,0,0))]
 
     @property
     def current_hurtboxes(self) -> list:
         try:
             return self.__hurtboxes[self.__current_frame_index+1]
         except KeyError:
-            return [CollisionBox(0,0,0,0,0,0,0,0,0,0,(0,0,0,0))]
+            return [CollisionBox(0,0,0,0,0,0,0,0,0,0,pygame.Rect(0,0,0,0))]
 
     def get_current_frame(self) -> pygame.Surface:
         if self.__current_lag_frame > 0:
