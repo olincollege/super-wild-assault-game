@@ -67,6 +67,10 @@ class Player(SwagCollisionSprite):
     @property
     def player_number(self) -> int:
         return self._player_number
+    
+    @property
+    def health(self) -> int:
+        return self._health
 
     @property
     def current_animation(self) -> Animation:
