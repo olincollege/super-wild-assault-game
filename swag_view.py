@@ -6,6 +6,7 @@ from swag_player import Player
 import pygame
 from pygame.locals import *     # type: ignore  pylint: disable=wildcard-import
 from swag_stage import SwagStage, SwagStageBackground, SwagBarriers
+from swag_healthbar import SwagHealthBar
 
 class SwagView(ABC):
     '''
@@ -28,6 +29,8 @@ class SwagView(ABC):
         all_sprites.add(right_barrier) # barrier 2
         all_sprites.add(P1) # player 1
         all_sprites.add(P2) # player 2
+        all_sprites.add(P1.healthbar)
+        all_sprites.add(P2.healthbar)
         self.all_sprites = all_sprites
         # Set up game window
         self._HEIGHT = self._background.WIDTH # Window height
@@ -74,10 +77,9 @@ class PygameView(SwagView):
         '''
         Outputs pygame view of SWAG game.
         '''
-        # Default Blank Background
-        self.displaysurface.fill((255,255,255))
         # Render game
         for entity in self.all_sprites:
             self.displaysurface.blit(entity.surf, entity.rect)
+            
         pygame.display.update()
         self._FramePerSec.tick(self._FPS)
