@@ -10,7 +10,6 @@ from swag_player import Player
 from swag_view import PygameView
 from swag_input_handler import PygameInput
 from swag_hit_detector import HitDetector
-#from swag_healthbar import SwagHealthBar
 
 
 if __name__ == '__main__':
@@ -26,9 +25,6 @@ if __name__ == '__main__':
     # create players
     P1 = Player(1, 'olinman', STAGE, BARRIER_SPRITES)
     P2 = Player(2, 'catboy', STAGE, BARRIER_SPRITES)
-    # create player healthbars
-    #P1HEALTHBAR = pygame.sprite.GroupSingle(SwagHealthBar(50,45,True))
-    #P2HEALTHBAR = pygame.sprite.GroupSingle(SwagHealthBar(1000-450,45,False))
 
     # create view
     VIEW = PygameView(BACKGROUND,STAGE,LEFT_BARRIER,RIGHT_BARRIER, P1, P2)
@@ -43,12 +39,6 @@ if __name__ == '__main__':
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
-            # TODO: actually implement damage
-            # if event.type == pygame.KEYDOWN:
-            #     if event.key == pygame.K_DOWN:
-            #         P1HEALTHBAR.sprite.get_damage(200)
-            #     if event.key == pygame.K_UP:
-            #         P2HEALTHBAR.sprite.get_damage(200)
 
         for controller in CONTROLLERS:
             controller.poll_input()
@@ -57,6 +47,3 @@ if __name__ == '__main__':
         P1.update()
         P2.update()
         VIEW.draw()
-        # healthbars
-        # P1HEALTHBAR.update()
-        # P2HEALTHBAR.update()
