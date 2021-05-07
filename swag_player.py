@@ -70,7 +70,11 @@ class Player(SwagCollisionSprite):
     @property
     def player_number(self) -> int:
         return self._player_number
-    
+
+    @property
+    def facing_left(self) -> bool:
+        return self._facing_left
+
     @property
     def health(self) -> int:
         return self._health
