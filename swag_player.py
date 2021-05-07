@@ -9,10 +9,10 @@ from swag_animation import Animation
 from swag_stage import SwagStage
 from swag_collisionsprite import SwagCollisionSprite
 from swag_helpers import sign, PlayerPhysics, MoveInfo
+from swag_healthbar import SwagHealthBar
 
 
 class Player(SwagCollisionSprite):
-
     def __init__(self, player_number: int, character: str, stage: SwagStage, barriers: list) -> None:
         super().__init__()
         self._stage = stage
@@ -40,6 +40,9 @@ class Player(SwagCollisionSprite):
             self._health = prop_dict['health']
             self._physics = PlayerPhysics(**(prop_dict['physics']))
             self._moves = prop_dict['moves']
+        
+        # set up healthbar
+        self.healthbar = SwagHealthBar(self._player_number,self._health)
 
 
         self.vel = Vector2(0,0)
@@ -177,7 +180,7 @@ class Player(SwagCollisionSprite):
         self.acc.y = 0
 
         # control health bar
-        # self.advanced_health()
+        self.healthbar.update_bar()
 
     def _stage_collision(self) -> list:
         return pygame.sprite.spritecollide(self, self._stage_group, False, collided=hitbox_collision)
@@ -225,6 +228,7 @@ class Player(SwagCollisionSprite):
                 print(f'player {self._player_number}self._health: {self._health}')
             if self._health < 0:
                 self._health = 0
+            self.healthbar.damage(damage)
 
 
 def hitbox_collision(sprite1: SwagCollisionSprite, sprite2: SwagCollisionSprite) -> bool:
