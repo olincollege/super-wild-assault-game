@@ -225,7 +225,6 @@ class Player(SwagCollisionSprite):
             self.acc.x += knockback_direction.x
             if self._health > 0:
                 self._health -= damage
-                print(f'player {self._player_number}self._health: {self._health}')
             if self._health < 0:
                 self._health = 0
             self.healthbar.damage(damage)
