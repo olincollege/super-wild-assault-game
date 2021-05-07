@@ -2,21 +2,21 @@
     "name": "Catboy",
     "health": 100,
     "physics": {
-        "ground_accel": 0.3,
-        "ground_speed": 3,
-        "air_accel": 0.3,
-        "air_speed": 3,
+        "ground_accel": 0.7,
+        "ground_speed": 7,
+        "air_accel": 0.5,
+        "air_speed": 5,
         "weight": 1,
-        "gravity": 0.5,
-        "fall_speed": 3,
-        "jump_accel": -10,
-        "traction": 0.2
+        "gravity": 1,
+        "fall_speed": 5,
+        "jump_accel": -14,
+        "traction": 0.4
     },
     "moves": {
         "block": {
             "allowed_states": ["ground"],
             "cancelable_start": 0,
-            "endlag": 0,
+            "endlag": 3,
             "can_move": false
         },
         "hit":  {

@@ -16,7 +16,7 @@
         "block": {
             "allowed_states": ["ground"],
             "cancelable_start": 0,
-            "endlag": 0,
+            "endlag": 3,
             "can_move": false
         },
         "hit":  {
