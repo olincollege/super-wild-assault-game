@@ -199,7 +199,7 @@ class Player(SwagCollisionSprite):
                     self.pos.y = lowest.collision.top + 1
                     self.vel.y = 0
                     self.acc.y = 0
-                    if self._in_air:
+                    if self._in_air and self.current_animation.move != 'hit':
                         self.switch_animation('land')
                     self._in_air = False
 
