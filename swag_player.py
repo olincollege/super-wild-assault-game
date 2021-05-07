@@ -225,8 +225,8 @@ class Player(SwagCollisionSprite):
     def attacked(self, damage: int, base_knockback: float, knockback_direction: Vector2) -> None:
         if self.current_animation.move != 'hit':
             self.switch_animation('hit')
-            self.acc.y += knockback_direction.y
-            self.acc.x += knockback_direction.x
+            self.acc.y += base_knockback * knockback_direction.y
+            self.acc.x += base_knockback * knockback_direction.x
             if self._health > 0:
                 self._health -= damage
             if self._health < 0:
