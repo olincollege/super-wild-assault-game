@@ -4,6 +4,7 @@ Swag Game 👍
 
 from swag_stage import SwagStage, SwagStageBackground, SwagBarriers
 import sys
+import time
 import pygame
 from pygame.locals import *     # type: ignore  pylint: disable=wildcard-import
 from swag_player import Player
@@ -31,17 +32,21 @@ if __name__ == '__main__':
     HIT_DETECTOR = HitDetector((P1, P2))
 
     CONTROLLERS = [PygameInput(P1), PygameInput(P2)]
+    game_end = False
 
     VIEW.draw()
     while True:
         for event in pygame.event.get():
             # Will run when the close window button is clicked    
-            if event.type == QUIT:
+            if event.type == QUIT or game_end == True:
                 pygame.quit()
                 sys.exit()
-
-        for controller in CONTROLLERS:
-            controller.poll_input()
+        if not P1.lost and not P2.lost:
+            for controller in CONTROLLERS:
+                controller.poll_input()
+        elif not game_end:
+            print(f'{P2.character_name * P1.lost}{P1.character_name * P2.lost} wins! Restart the game to play again.')
+            game_end = True
         # check collisions then update p1 and p2
         HIT_DETECTOR.player_collision()
         P1.update()

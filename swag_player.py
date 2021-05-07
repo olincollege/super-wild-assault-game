@@ -41,6 +41,9 @@ class Player(SwagCollisionSprite):
             self._physics = PlayerPhysics(**(prop_dict['physics']))
             self._moves = prop_dict['moves']
         
+        # set up win/loss condition
+        self._loss = False
+        
         # set up healthbar
         self.healthbar = SwagHealthBar(self._player_number,self._health)
 
@@ -72,6 +75,10 @@ class Player(SwagCollisionSprite):
         return self._player_number
 
     @property
+    def character_name(self) -> str:
+        return self._name
+
+    @property
     def facing_left(self) -> bool:
         return self._facing_left
 
@@ -82,6 +89,10 @@ class Player(SwagCollisionSprite):
     @property
     def current_animation(self) -> Animation:
         return self._current_animation
+    
+    @property
+    def lost(self) -> bool:
+        return self._loss
 
     def switch_animation(self, animation_name: str) -> None:
         self._current_animation.reset()
@@ -229,9 +240,11 @@ class Player(SwagCollisionSprite):
             self.acc.x += base_knockback * knockback_direction.x
             if self._health > 0:
                 self._health -= damage
-            if self._health < 0:
+                self.healthbar.damage(damage)
+            if self._health <= 0:
                 self._health = 0
-            self.healthbar.damage(damage)
+                self._loss = True
+            
 
 
 def hitbox_collision(sprite1: SwagCollisionSprite, sprite2: SwagCollisionSprite) -> bool:
