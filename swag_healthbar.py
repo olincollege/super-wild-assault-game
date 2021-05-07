@@ -2,70 +2,50 @@
 Swag healthbar. Based on: https://youtu.be/pUEZbUAMZYA, https://www.codepile.net/pile/XydlGQy1
 '''
 import pygame, sys
+import time
 from math import ceil
 
+clock = pygame.time.Clock()
 class SwagHealthBar(pygame.sprite.Sprite):
-    def __init__(self, player: Player,healthbar_x,healthbar_y,horizontal_flip):
+    def __init__(self, player_number: int, health: int):
         super().__init__()
-        self.healthbar_x = healthbar_x
-        self.healthbar_y = healthbar_y
-        self.horizontal_flip = horizontal_flip
-        self.image = player.surf # sprite
-        self.rect = player.rect
-        self.max_health = 1000
-        self.target_health = self.max_health
-        self.current_health = self.max_health
+        if player_number == 1:
+            self.healthbar_x = 550
+            self.healthbar_y = 45
+            self.horizontal_flip = False
+        if player_number == 2:
+            self.healthbar_x = 50
+            self.healthbar_y = 45
+            self.horizontal_flip = True
+        self.max_health = health
+        self.target_health = health # player health
+        self.current_health = health
         self.health_bar_length = 400
         self.health_ratio = self.max_health / self.health_bar_length
-        self.health_change_speed = 5
+        self.health_change_speed = 1
+        self.surf = pygame.Surface((self.health_bar_length, 25))
+        self.rect = self.surf.get_rect(topleft=(self.healthbar_x, self.healthbar_y))
+    
+    def damage(self, amount):
+        self.target_health -= amount
 
-    def get_damage(self,amount):
-        if self.target_health > 0:
-            self.target_health -= amount
-        if self.target_health < 0:
-            self.target_health = 0
-
-    def update(self):
-        self.advanced_health()
-
-    def advanced_health(self):
+    def update_bar(self):
         transition_width = 0
-        transition_color = (255,0,0)
+        transition_color = (255,255,0)
+        transition_bar = pygame.Rect(0,0,0,0)
         if self.current_health > self.target_health:
             self.current_health -= self.health_change_speed
-            transition_width = -ceil((self.target_health - self.current_health) / self.health_ratio)
-            transition_color = (255,255,0)
+            transition_width = ceil((self.current_health - self.target_health)/self.health_ratio)
         health_bar_width = int(self.target_health / self.health_ratio)
-        # TODO: change
         if self.horizontal_flip:
-            health_bar = pygame.Rect(+ self.healthbar_x + self.health_bar_length - health_bar_width,self.healthbar_y,health_bar_width,25)
-            transition_bar = pygame.Rect(health_bar.left - transition_width,self.healthbar_y,transition_width,25)
+            health_bar = pygame.Rect(self.health_bar_length - health_bar_width,0,
+                health_bar_width,25)
+            transition_bar = pygame.Rect(health_bar.left - transition_width,\
+                0,transition_width,25)
         else:
-            health_bar = pygame.Rect(self.healthbar_x,self.healthbar_y,health_bar_width,25)
-            transition_bar = pygame.Rect(health_bar.right,45,transition_width,25)
-        pygame.draw.rect(screen,(255,0,0),health_bar)
-        pygame.draw.rect(screen,transition_color,transition_bar)	
-        pygame.draw.rect(screen,(255,255,255),(self.healthbar_x,self.healthbar_y,self.health_bar_length,25),4)	
-
-pygame.init()
-screen = pygame.display.set_mode((1000,500))
-clock = pygame.time.Clock()
-player1 = pygame.sprite.GroupSingle(SwagHealthBar(50,45,True))
-player2 = pygame.sprite.GroupSingle(SwagHealthBar(550,45,False))
-while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            sys.exit()
-            pygame.quit()
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_DOWN:
-                player1.sprite.get_damage(200)
-            if event.key == pygame.K_UP:
-                player2.sprite.get_damage(200)
-
-    screen.fill((30,30,30))
-    player1.draw(screen)
-    player1.update()
-    player2.update()
-    pygame.display.update()
-    clock.tick(60)
+            health_bar = pygame.Rect(0,0,health_bar_width,25)
+            transition_bar = pygame.Rect(health_bar.right,0,transition_width,25)
+        self.surf.fill((44, 38, 69))     # background color for empty health
+        self.surf.fill((255,0,0),health_bar)            # filled health color
+        self.surf.fill(transition_color,transition_bar) # transition health color
+        pygame.draw.rect(self.surf,(255,255,255),(0,0,self.health_bar_length,25),4) # outline
