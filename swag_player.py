@@ -16,8 +16,9 @@ class Player(SwagCollisionSprite):
     '''
     [summary]
     '''
+
     def __init__(self, player_number: int, character: str,
-                            stage: SwagStage, barriers: list) -> None:
+                 stage: SwagStage, barriers: list) -> None:
         '''
         [summary]
 
@@ -34,16 +35,16 @@ class Player(SwagCollisionSprite):
         self._character = character
         self._player_number = player_number
         self.surf = pygame.image.load(os.path.join('chars', character, 'sprites', 'idle',
-            f'{character}_idle-1.png'))
+                                                   f'{character}_idle-1.png'))
 
         # set up starting location
         if self._player_number == 1:
-            self.rect = self.surf.get_rect(center = (750, 250))
-            self.pos = Vector2((750,250))
+            self.rect = self.surf.get_rect(center=(750, 250))
+            self.pos = Vector2((750, 250))
             self._facing_left = True
         elif self._player_number == 2:
-            self.rect = self.surf.get_rect(center = (250, 250))
-            self.pos = Vector2((250,250))
+            self.rect = self.surf.get_rect(center=(250, 250))
+            self.pos = Vector2((250, 250))
             self._facing_left = False
 
         # import character properties from file
@@ -58,13 +59,12 @@ class Player(SwagCollisionSprite):
         self._loss = False
 
         # set up healthbar
-        self.healthbar = SwagHealthBar(self._player_number,self._health)
+        self.healthbar = SwagHealthBar(self._player_number, self._health)
 
-
-        self.vel = Vector2(0,0)
-        self.acc = Vector2(0,0)
-        self.knockback_acc = Vector2(0,0)
-        self.controlled_acc = Vector2(0,0)
+        self.vel = Vector2(0, 0)
+        self.acc = Vector2(0, 0)
+        self.knockback_acc = Vector2(0, 0)
+        self.controlled_acc = Vector2(0, 0)
         self._flip = False
 
         self._hitstun = False
@@ -79,7 +79,7 @@ class Player(SwagCollisionSprite):
             self._barrier_group.add(barrier_sprite)
 
         self._animations = {move: Animation(self._character, MoveInfo(move, **move_info))
-                                            for move, move_info in self._moves.items()}
+                            for move, move_info in self._moves.items()}
 
         self._current_animation = self._animations['idle']  # type: Animation
 
@@ -172,7 +172,7 @@ class Player(SwagCollisionSprite):
         # if prior move not the same and animation is ok to switch, reset animation frame then
         # change current animation
         if self._current_animation.done or \
-            (self._current_animation.cancelable and \
+            (self._current_animation.cancelable and
                 self._current_animation.move != new_animation) and \
                 self._animations[new_animation].allowed_to_start(self._state):
             self.switch_animation(new_animation)
@@ -187,9 +187,11 @@ class Player(SwagCollisionSprite):
         # left/right:
         if (action in ('left', 'right')) and self._moves[self._current_animation.move]['can_move']:
             if self._state == 'air':
-                self.controlled_acc.x = sign(-1*self._facing_left) * self._physics.air_accel
+                self.controlled_acc.x = sign(-1*self._facing_left) * \
+                    self._physics.air_accel
             else:
-                self.controlled_acc.x = sign(-1*self._facing_left) * self._physics.ground_accel
+                self.controlled_acc.x = sign(-1*self._facing_left) * \
+                    self._physics.ground_accel
 
         # jumping:
         if self._current_animation.move == 'jump' and self._state == 'ground':
@@ -203,9 +205,11 @@ class Player(SwagCollisionSprite):
         friction_acc = 0
         if not self.controlled_acc.x:
             if self._state == 'ground':
-                friction_acc = self._physics.traction * -sign(self.vel.x) * (abs(self.vel.x) > 0)
+                friction_acc = self._physics.traction * - \
+                    sign(self.vel.x) * (abs(self.vel.x) > 0)
             else:
-                friction_acc = self._physics.air_accel * -sign(self.vel.x) * (abs(self.vel.x) > 0)
+                friction_acc = self._physics.air_accel * - \
+                    sign(self.vel.x) * (abs(self.vel.x) > 0)
 
         self.acc.x += friction_acc
 
@@ -233,15 +237,17 @@ class Player(SwagCollisionSprite):
         # update the sprite and bounding box for the current animation
         self._current_animation.update_frame()
         self.surf = self._current_animation.get_current_frame()
-        self.rect = self.surf.get_rect(center = (self.pos.x, self.pos.y))
+        self.rect = self.surf.get_rect(center=(self.pos.x, self.pos.y))
         # mirror the sprite horizontally if the player is facing left
         if self._facing_left:
             self.surf = pygame.transform.flip(self.surf, True, False)
 
-        self._stage_collision_check()   # if player is on the ground, don't let them fall through
-        self._barrier_collision_check() # if the player is crossing over a window barrier
+        # if player is on the ground, don't let them fall through
+        self._stage_collision_check()
+        self._barrier_collision_check()  # if the player is crossing over a window barrier
 
-        self.pos += self.vel + 0.5 * self.acc   # update position based on current vel and accel
+        # update position based on current vel and accel
+        self.pos += self.vel + 0.5 * self.acc
         self.rect.midbottom = self.pos
 
         if self._stage_collision():
@@ -268,7 +274,7 @@ class Player(SwagCollisionSprite):
             list: [description]
         '''
         return pygame.sprite.spritecollide(self, self._stage_group,
-            False, collided=hitbox_collision)
+                                           False, collided=hitbox_collision)
 
     def _stage_collision_check(self) -> None:
         '''
@@ -295,7 +301,7 @@ class Player(SwagCollisionSprite):
             list: [description]
         '''
         return pygame.sprite.spritecollide(self, self._barrier_group,
-                False, collided=hitbox_collision)
+                                           False, collided=hitbox_collision)
 
     def _barrier_collision_check(self) -> None:
         '''
