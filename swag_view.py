@@ -18,18 +18,18 @@ class SwagView(ABC):
         self._stage = stage
         self._left_barrier = barriers[0]
         self._right_barrier = barriers[1]
-        self._P1 = players[0]
-        self._P2 = players[1]
+        self._player1 = players[0]
+        self._player2 = players[1]
         # Use to show sprites
         all_sprites = pygame.sprite.Group()
         all_sprites.add(background) # background
         all_sprites.add(stage) # platform
         all_sprites.add(self._left_barrier) # barrier 1
         all_sprites.add(self._right_barrier) # barrier 2
-        all_sprites.add(self._P1) # player 1
-        all_sprites.add(self._P2) # player 2
-        all_sprites.add(self._P1.healthbar)
-        all_sprites.add(self._P2.healthbar)
+        all_sprites.add(self._player1) # player 1
+        all_sprites.add(self._player2) # player 2
+        all_sprites.add(self._player1.healthbar)
+        all_sprites.add(self._player2.healthbar)
         self.all_sprites = all_sprites
         # Set up game window
         self._HEIGHT = self._background.WIDTH # Window height
