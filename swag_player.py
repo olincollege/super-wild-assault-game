@@ -2,8 +2,8 @@
 docstring moment
 '''
 import os
-import pygame
 import json
+import pygame
 from pygame import Vector2
 from swag_animation import Animation
 from swag_stage import SwagStage
@@ -13,7 +13,20 @@ from swag_healthbar import SwagHealthBar
 
 
 class Player(SwagCollisionSprite):
-    def __init__(self, player_number: int, character: str, stage: SwagStage, barriers: list) -> None:
+    '''
+    [summary]
+    '''
+    def __init__(self, player_number: int, character: str,
+                            stage: SwagStage, barriers: list) -> None:
+        '''
+        [summary]
+
+        Args:
+            player_number (int): [description]
+            character (str): [description]
+            stage (SwagStage): [description]
+            barriers (list): [description]
+        '''
         super().__init__()
         self._stage = stage
         self._barriers = barriers
@@ -22,7 +35,7 @@ class Player(SwagCollisionSprite):
         self._player_number = player_number
         self.surf = pygame.image.load(os.path.join('chars', character, 'sprites', 'idle',
             f'{character}_idle-1.png'))
-        
+
         # set up starting location
         if self._player_number == 1:
             self.rect = self.surf.get_rect(center = (750, 250))
@@ -40,10 +53,10 @@ class Player(SwagCollisionSprite):
             self._health = prop_dict['health']
             self._physics = PlayerPhysics(**(prop_dict['physics']))
             self._moves = prop_dict['moves']
-        
+
         # set up win/loss condition
         self._loss = False
-        
+
         # set up healthbar
         self.healthbar = SwagHealthBar(self._player_number,self._health)
 
@@ -55,7 +68,7 @@ class Player(SwagCollisionSprite):
         self._flip = False
 
         self._hitstun = False
-        self._in_air = True
+        self._state = 'air'
 
         # stage collisions
         self._stage_group = pygame.sprite.Group()
@@ -72,50 +85,97 @@ class Player(SwagCollisionSprite):
 
     @property
     def player_number(self) -> int:
+        '''
+        [summary]
+
+        Returns:
+            int: [description]
+        '''
         return self._player_number
 
     @property
     def character_name(self) -> str:
+        '''
+        [summary]
+
+        Returns:
+            str: [description]
+        '''
         return self._name
 
     @property
     def facing_left(self) -> bool:
+        '''
+        [summary]
+
+        Returns:
+            bool: [description]
+        '''
         return self._facing_left
 
     @property
     def health(self) -> int:
+        '''
+        [summary]
+
+        Returns:
+            int: [description]
+        '''
         return self._health
 
     @property
     def current_animation(self) -> Animation:
+        '''
+        [summary]
+
+        Returns:
+            Animation: [description]
+        '''
         return self._current_animation
-    
+
     @property
     def lost(self) -> bool:
+        '''
+        [summary]
+
+        Returns:
+            bool: [description]
+        '''
         return self._loss
 
     def switch_animation(self, animation_name: str) -> None:
+        '''
+        [summary]
+
+        Args:
+            animation_name (str): [description]
+        '''
         self._current_animation.reset()
         self._current_animation = self._animations[animation_name]
 
     def action(self, action: str) -> None:
+        '''
+        [summary]
+
+        Args:
+            action (str): [description]
+        '''
         # determine which animation is being asked for
         new_animation = action
-        if action == 'left' or action == 'right':
-            if self._in_air:
+        if action in ('left', 'right'):
+            if self._state == 'air':
                 new_animation = 'air_idle'
             else:
                 new_animation = 'walk'
-        if action == 'idle' and self._in_air:
+        if action == 'idle' and self._state == 'air':
             new_animation = 'air_idle'
         # if prior move not the same and animation is ok to switch, reset animation frame then
         # change current animation
-        if self._current_animation.done or (self._current_animation.cancelable and self._current_animation.move != new_animation):
-            state = 'ground'
-            if self._in_air:
-                state = 'air'
-            if self._animations[new_animation].allowed_to_start(state):
-                self.switch_animation(new_animation)
+        if self._current_animation.done or \
+            (self._current_animation.cancelable and \
+                self._current_animation.move != new_animation) and \
+                self._animations[new_animation].allowed_to_start(self._state):
+            self.switch_animation(new_animation)
 
         # set facing
         if action == 'left':
@@ -125,21 +185,24 @@ class Player(SwagCollisionSprite):
 
         # special cases for when the player should be moving around
         # left/right:
-        if (action == 'left' or action == 'right') and self._moves[self._current_animation.move]['can_move']:
-            if self._in_air:
+        if (action in ('left', 'right')) and self._moves[self._current_animation.move]['can_move']:
+            if self._state == 'air':
                 self.controlled_acc.x = sign(-1*self._facing_left) * self._physics.air_accel
             else:
                 self.controlled_acc.x = sign(-1*self._facing_left) * self._physics.ground_accel
 
         # jumping:
-        if self._current_animation.move == 'jump' and not self._in_air:
+        if self._current_animation.move == 'jump' and self._state == 'ground':
             self.controlled_acc.y = self._physics.jump_accel
 
     def update(self) -> None:
+        '''
+        [summary]
+        '''
         # add appropriate resistive force depending on whether or not the player is on the ground
         friction_acc = 0
         if not self.controlled_acc.x:
-            if not self._in_air:
+            if self._state == 'ground':
                 friction_acc = self._physics.traction * -sign(self.vel.x) * (abs(self.vel.x) > 0)
             else:
                 friction_acc = self._physics.air_accel * -sign(self.vel.x) * (abs(self.vel.x) > 0)
@@ -158,9 +221,9 @@ class Player(SwagCollisionSprite):
         self.vel += self.acc    # update velocity
 
         # apply ground and air speed cap
-        if abs(self.vel.x) > self._physics.ground_speed and not self._in_air:
+        if abs(self.vel.x) > self._physics.ground_speed and self._state == 'ground':
             self.vel.x = self._physics.ground_speed * sign(self.vel.x)
-        if abs(self.vel.x) > self._physics.air_speed and self._in_air:
+        if abs(self.vel.x) > self._physics.air_speed and self._state == 'air':
             self.vel.x = self._physics.air_speed * sign(self.vel.x)
 
         # stop the player if their speed is below a threshold
@@ -182,9 +245,9 @@ class Player(SwagCollisionSprite):
         self.rect.midbottom = self.pos
 
         if self._stage_collision():
-            self._in_air = False
+            self._state = 'ground'
         else:
-            self._in_air = True
+            self._state = 'air'
 
         # reset accelerations so things don't fly out of control
         self.controlled_acc.x = 0
@@ -198,9 +261,19 @@ class Player(SwagCollisionSprite):
         self.healthbar.update_bar()
 
     def _stage_collision(self) -> list:
-        return pygame.sprite.spritecollide(self, self._stage_group, False, collided=hitbox_collision)
+        '''
+        [summary]
+
+        Returns:
+            list: [description]
+        '''
+        return pygame.sprite.spritecollide(self, self._stage_group,
+            False, collided=hitbox_collision)
 
     def _stage_collision_check(self) -> None:
+        '''
+        [summary]
+        '''
         stage_collisions = self._stage_collision()
         if self.vel.y > 0:
             if stage_collisions:
@@ -210,14 +283,24 @@ class Player(SwagCollisionSprite):
                     self.pos.y = lowest.collision.top + 1
                     self.vel.y = 0
                     self.acc.y = 0
-                    if self._in_air and self.current_animation.move != 'hit':
+                    if self._state == 'air' and self.current_animation.move != 'hit':
                         self.switch_animation('land')
-                    self._in_air = False
+                    self._state = 'ground'
 
     def _barrier_collision(self) -> list:
-        return pygame.sprite.spritecollide(self, self._barrier_group, False, collided=hitbox_collision)
-    
+        '''
+        [summary]
+
+        Returns:
+            list: [description]
+        '''
+        return pygame.sprite.spritecollide(self, self._barrier_group,
+                False, collided=hitbox_collision)
+
     def _barrier_collision_check(self) -> None:
+        '''
+        [summary]
+        '''
         barrier_collisions = self._barrier_collision()
         if barrier_collisions:
             first_collision = barrier_collisions[0]
@@ -234,6 +317,14 @@ class Player(SwagCollisionSprite):
                     self.acc.x = 0
 
     def attacked(self, damage: int, base_knockback: float, knockback_direction: Vector2) -> None:
+        '''
+        [summary]
+
+        Args:
+            damage (int): [description]
+            base_knockback (float): [description]
+            knockback_direction (Vector2): [description]
+        '''
         if self.current_animation.move != 'hit':
             self.switch_animation('hit')
             self.acc.y += base_knockback * knockback_direction.y
@@ -244,7 +335,6 @@ class Player(SwagCollisionSprite):
             if self._health <= 0:
                 self._health = 0
                 self._loss = True
-            
 
 
 def hitbox_collision(sprite1: SwagCollisionSprite, sprite2: SwagCollisionSprite) -> bool:
