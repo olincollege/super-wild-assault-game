@@ -1,5 +1,6 @@
 <div align=center>
 <br/>
+<img src= "./pixel_olin.png"/>
 <section id="downloads">
           <a href="./download" class="btn btn-github"><span class="icon"></span>Play the Game</a>
         </section>
@@ -16,7 +17,7 @@
 - Given the nature of S.W.A.G., anyone is able to create their own characters and add them to the fighting game! Here are the requirements of the characters as you add them in, in their own folder in the `/chars/` folder.
 
 ### Character Information
-*Within the `[character].info.` file, in json style.*
+`Within the [character].info file, in json style.`
 1. **Name, Health, Weight, and Physics:**
 
     - Customize the max health and weight of the character to set the feeling of the way that they move. 
@@ -32,13 +33,17 @@
     - **Can move**: whether or not a player can go right or left during an animation *(i.e. blocking or jabbing)*.
 
 ### Sprites: Moveset Animations
-*Within the `/SPRITES/[move]/` folder.*
+`Within the /SPRITES/[move]/ folder.`
+
+![](catboy_walk-1.png)![](catboy_walk-3.png)![](catboy_walk-5.png)![](catboy_walk-7.png)![](catboy_walk-9.png)![](catboy_walk-11.png)![](catboy_walk.gif)
 
 Add frames for animations for each the moves the character has! Here is the list of moves: Idle, walk, jab, block, air idle, jump, land, and got hit. When implemented with the *Player* script, this information is immediately utilized by the engine.
 
 ### Framedata: Hitboxes and Hurtboxes
-*Within the `[character].anim.` file, in CSV style.*
-
+`Within the [character].anim file, in CSV style.`
+<div align=center>
+<img src= "./olinman_jab.gif"/> <img src= "./catboy_hit.gif"/>
+</div>
 Give information about the size and location of these boxes which control the interaction between characters, such as whether or not a player's hit connects with the head and torso, or legs.
 - **Hitbox**: Where the player is vulnerable to being hit
 - **Hurtbox**: Where contact leads to damage of the opponent
@@ -54,4 +59,7 @@ ppppp ppppp pppppp ppppppp ppppppp  ppppp ppppppp pppppppp ppppppp pppppppp pppp
 <h2> Melissa Kazazic </h2>
 <div style= "width:50%">
 ppppp ppppp pppppp ppppppp ppppppp  ppppp ppppppp pppppppp ppppppp pppppppp ppppp pppp ppppp pppp p </div>
+<br/>
+<br/>
+<img src= "./title.png"/>
 </div>
