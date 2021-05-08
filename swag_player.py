@@ -11,7 +11,7 @@ from swag_helpers import sign, PlayerPhysics, MoveInfo
 from swag_healthbar import SwagHealthBar
 
 
-class Player(pygame.sprite.Sprite):
+class Player(pygame.sprite.Sprite):  # pylint: disable=too-many-instance-attributes
     '''
     [summary]
     '''
@@ -28,13 +28,29 @@ class Player(pygame.sprite.Sprite):
             barriers (list): [description]
         '''
         super().__init__()
-        self._stage = stage
-        self._barriers = barriers
 
-        self._character = character
         self._player_number = player_number
         self.surf = pygame.image.load(os.path.join('chars', character, 'sprites', 'idle',
                                                    f'{character}_idle-1.png'))
+
+        # stage collisions
+        self._stage_group = pygame.sprite.Group()
+        self._stage_group.add(stage)
+        # barrier collisions
+        self._barrier_group = pygame.sprite.Group()
+        for barrier_sprite in barriers:
+            self._barrier_group.add(barrier_sprite)
+
+        # import character properties from file
+        with open(os.path.join('chars', character, f'{character}.info'), 'r') as info_file:
+            prop_dict = json.load(info_file)
+            self._name = prop_dict['name']
+            self._health = prop_dict['health']
+            self._physics = PlayerPhysics(**(prop_dict['physics']))
+            self._moves = prop_dict['moves']
+
+        self._animations = {move: Animation(character, MoveInfo(move, **move_info))
+                            for move, move_info in self._moves.items()}
 
         # set up starting location
         if self._player_number == 1:
@@ -46,14 +62,6 @@ class Player(pygame.sprite.Sprite):
             self.pos = Vector2((250, 250))
             self._facing_left = False
 
-        # import character properties from file
-        with open(os.path.join('chars', character, f'{character}.info'), 'r') as info_file:
-            prop_dict = json.load(info_file)
-            self._name = prop_dict['name']
-            self._health = prop_dict['health']
-            self._physics = PlayerPhysics(**(prop_dict['physics']))
-            self._moves = prop_dict['moves']
-
         # set up win/loss condition
         self._loss = False
 
@@ -64,21 +72,8 @@ class Player(pygame.sprite.Sprite):
         self.acc = Vector2(0, 0)
         self.knockback_acc = Vector2(0, 0)
         self.controlled_acc = Vector2(0, 0)
-        self._flip = False
 
-        self._hitstun = False
         self._state = 'air'
-
-        # stage collisions
-        self._stage_group = pygame.sprite.Group()
-        self._stage_group.add(self._stage)
-        # barrier collisions
-        self._barrier_group = pygame.sprite.Group()
-        for barrier_sprite in self._barriers:
-            self._barrier_group.add(barrier_sprite)
-
-        self._animations = {move: Animation(self._character, MoveInfo(move, **move_info))
-                            for move, move_info in self._moves.items()}
 
         self._current_animation = self._animations['idle']  # type: Animation
 
@@ -223,7 +218,7 @@ class Player(pygame.sprite.Sprite):
         self.acc.x += friction_acc
 
         # if in hitstun, make controlled acceleration much smaller
-        if self._hitstun:
+        if self._current_animation.move == 'hit':
             self.controlled_acc.x *= .2
             self.controlled_acc.y *= .2
         self.acc.y += self.controlled_acc.y     # jump accel, DI

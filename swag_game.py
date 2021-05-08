@@ -18,15 +18,16 @@ if __name__ == '__main__':
 
     # create stage
     BACKGROUND = SwagStageBackground()
-    STAGE = SwagStage(BACKGROUND.WIDTH, BACKGROUND.HEIGHT)
-    LEFT_BARRIER = SwagBarriers(BACKGROUND.HEIGHT, 0)
-    RIGHT_BARRIER = SwagBarriers(BACKGROUND.HEIGHT, BACKGROUND.WIDTH)
+    STAGE = SwagStage(BACKGROUND.width, BACKGROUND.height)
+    LEFT_BARRIER = SwagBarriers(BACKGROUND.height, 0)
+    RIGHT_BARRIER = SwagBarriers(BACKGROUND.height, BACKGROUND.width)
     BARRIER_SPRITES = [LEFT_BARRIER, RIGHT_BARRIER]
     # create players
     P1 = Player(1, 'olinman', STAGE, BARRIER_SPRITES)
     P2 = Player(2, 'catboy', STAGE, BARRIER_SPRITES)
 
-    VIEW = PygameView(BACKGROUND, STAGE, (LEFT_BARRIER, RIGHT_BARRIER), (P1, P2))
+    VIEW = PygameView(BACKGROUND, STAGE,
+                      (LEFT_BARRIER, RIGHT_BARRIER), (P1, P2))
     HIT_DETECTOR = HitDetector((P1, P2))
     CONTROLLERS = [PygameInput(P1), PygameInput(P2)]
 

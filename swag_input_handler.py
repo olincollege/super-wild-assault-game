@@ -2,25 +2,32 @@
 Controllers for each player in the game (P1 and P2).
 '''
 from abc import ABC, abstractmethod
-from swag_player import Player
 import pygame
-from pygame.locals import *     # type: ignore  pylint: disable=wildcard-import
-from swag_stage import SwagStage
+from swag_player import Player
 
-class SwagInputHandler(ABC):
+
+class SwagInputHandler(ABC):  # pylint: disable=too-few-public-methods
     '''
     Docstring lol
     '''
 
     def __init__(self, player: Player) -> None:
+        '''
+        [summary]
+
+        Args:
+            player (Player): [description]
+        '''
         self._player = player
 
     @abstractmethod
     def poll_input(self):
-        pass
+        '''
+        [summary]
+        '''
 
 
-class PygameInput(SwagInputHandler):
+class PygameInput(SwagInputHandler):  # pylint: disable=too-few-public-methods
     '''
     Docstring lol
     '''
@@ -43,10 +50,19 @@ class PygameInput(SwagInputHandler):
     }
 
     def __init__(self, player: Player) -> None:
+        '''
+        [summary]
+
+        Args:
+            player (Player): [description]
+        '''
         super().__init__(player)
         self._keybinds = self.keybinds[player.player_number]
 
     def poll_input(self):
+        '''
+        [summary]
+        '''
         keys_pressed = pygame.key.get_pressed()
         player_keys_pressed = {}
         for key in self._keybinds:

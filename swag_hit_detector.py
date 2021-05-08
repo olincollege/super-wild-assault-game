@@ -8,10 +8,26 @@ from swag_helpers import CollisionBox, sign
 
 
 class HitDetector:
+    '''
+    [summary]
+    '''
+
     def __init__(self, players: Tuple[Player, Player]):
+        '''
+        [summary]
+
+        Args:
+            players (Tuple[Player, Player]): [description]
+        '''
         self.__players = players
 
-    def player_collision(self):
+    def get_collision_boxes(self) -> dict:
+        '''
+        [summary]
+
+        Returns:
+            dict: [description]
+        '''
         player_collision_boxes = {}
         for player in self.__players:
             collision_boxes = {
@@ -30,6 +46,13 @@ class HitDetector:
                         collision_boxes[box_type][index]._replace(
                             rect=collision_rect)
             player_collision_boxes[player.player_number] = collision_boxes
+        return player_collision_boxes
+
+    def player_collision(self):
+        '''
+        [summary]
+        '''
+        player_collision_boxes = self.get_collision_boxes()
 
         for hurt_player in self.__players:
             for hurtbox in player_collision_boxes[hurt_player.player_number]['hurt']:
