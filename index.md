@@ -1,8 +1,7 @@
 <div align=center>
 <br/>
-<h1> Download and Installation </h1>
 <section id="downloads">
-          <a href="/download.md" class="btn btn-github"><span class="icon"></span>Download Game</a>
+          <h1><a href="/download" class="btn btn-github"><span class="icon"></span>Download and Installation</a></h1>
         </section>
 </div>
 
@@ -14,7 +13,7 @@
 <br/>
 
 # **The Engine**: *Create your own character*
-`Given the nature of S.W.A.G., anyone is able to create their own characters and add them to the fighting game! Here are the requirements of the characters as you add them in, in their own folder in the /chars/ folder`:
+- Given the nature of S.W.A.G., anyone is able to create their own characters and add them to the fighting game! Here are the requirements of the characters as you add them in, in their own folder in the `/chars/` folder.
 
 ### Character Information
 *Within the `[character].info.` file, in json style.*
