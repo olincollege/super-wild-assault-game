@@ -7,12 +7,11 @@ import pygame
 from pygame import Vector2
 from swag_animation import Animation
 from swag_stage import SwagStage
-from swag_collisionsprite import SwagCollisionSprite
 from swag_helpers import sign, PlayerPhysics, MoveInfo
 from swag_healthbar import SwagHealthBar
 
 
-class Player(SwagCollisionSprite):
+class Player(pygame.sprite.Sprite):
     '''
     [summary]
     '''
@@ -82,6 +81,16 @@ class Player(SwagCollisionSprite):
                             for move, move_info in self._moves.items()}
 
         self._current_animation = self._animations['idle']  # type: Animation
+
+    @property
+    def collision(self):
+        '''
+        [summary]
+
+        Returns:
+            [type]: [description]
+        '''
+        return self.rect
 
     @property
     def player_number(self) -> int:
@@ -343,7 +352,7 @@ class Player(SwagCollisionSprite):
                 self._loss = True
 
 
-def hitbox_collision(sprite1: SwagCollisionSprite, sprite2: SwagCollisionSprite) -> bool:
+def hitbox_collision(sprite1: pygame.sprite.Sprite, sprite2: pygame.sprite.Sprite) -> bool:
     '''
     Check if two hitboxes collide
     '''
