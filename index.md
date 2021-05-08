@@ -1,6 +1,6 @@
 <div align=center>
 <br/>
-<h1> Download and Installation
+<h1> Download and Installation </h1>
 <section id="downloads">
           <a href="/download.md" class="btn btn-github"><span class="icon"></span>Download Game</a>
         </section>
