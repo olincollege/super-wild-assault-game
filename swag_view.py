@@ -4,7 +4,6 @@ SWAG game view.
 from abc import ABC, abstractmethod
 from swag_player import Player
 import pygame
-from pygame.locals import *     # type: ignore  pylint: disable=wildcard-import
 from swag_stage import SwagStage, SwagStageBackground, SwagBarriers
 from swag_healthbar import SwagHealthBar
 
