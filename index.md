@@ -1,7 +1,7 @@
 <div align=center>
 <br/>
 <section id="downloads">
-          <h1><a href="/download" class="btn btn-github"><span class="icon"></span>Download and Installation</a></h1>
+          <a href="./download" class="btn btn-github"><span class="icon"></span>Play the Game</a>
         </section>
 </div>
 
