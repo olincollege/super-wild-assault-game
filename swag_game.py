@@ -26,7 +26,7 @@ if __name__ == '__main__':
     P1 = Player(1, 'olinman', STAGE, BARRIER_SPRITES)
     P2 = Player(2, 'catboy', STAGE, BARRIER_SPRITES)
 
-    VIEW = PygameView(BACKGROUND, STAGE, LEFT_BARRIER, RIGHT_BARRIER, P1, P2)
+    VIEW = PygameView(BACKGROUND, STAGE, (LEFT_BARRIER, RIGHT_BARRIER), (P1, P2))
     HIT_DETECTOR = HitDetector((P1, P2))
     CONTROLLERS = [PygameInput(P1), PygameInput(P2)]
 
