@@ -1,4 +1,8 @@
-# Welcome to S.W.A.G.
+<section id="downloads">
+          <a href="/download.md" class="btn btn-github"><span class="icon"></span>Download Game</a>
+        </section>
+<br/>
+<br/>
 <div class="highlight" style = "word-wrap: break-word"><pre class="highlight"><code>
 S.W.A.G. is a platform fighter game drawing inspiration from M.U.G.E.N., Super Smash Bros., and Street Fighter. Our goal was to create a configurable engine similar to M.U.G.E.N. that new characters can be added to with relative ease.
 </code></pre></div>
@@ -41,12 +45,12 @@ Give information about the size and location of these boxes which control the in
 <div align=center>
 <h1> About Us: </h1>
 <h2> Jacob Smilg </h2>
-<div style= "width:300px">
-pppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp </div>
+<div style= "width:50%">
+ppppp ppppp pppppp ppppppp ppppppp  ppppp ppppppp pppppppp ppppppp pppppppp ppppp pppp ppppp pppp p </div>
 <br/>
 <h2> Melissa Kazazic </h2>
-<div style= "width:300px">
-pppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp </div>
+<div style= "width:50%">
+ppppp ppppp pppppp ppppppp ppppppp  ppppp ppppppp pppppppp ppppppp pppppppp ppppp pppp ppppp pppp p </div>
 </div>
 
 <br/>
