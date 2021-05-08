@@ -20,14 +20,14 @@ if __name__ == '__main__':
     BACKGROUND = SwagStageBackground()
     STAGE = SwagStage(BACKGROUND.WIDTH, BACKGROUND.HEIGHT)
     LEFT_BARRIER = SwagBarriers(BACKGROUND.WIDTH, BACKGROUND.HEIGHT, 0)
-    RIGHT_BARRIER = SwagBarriers(BACKGROUND.WIDTH, BACKGROUND.HEIGHT, BACKGROUND.WIDTH)
+    RIGHT_BARRIER = SwagBarriers(
+        BACKGROUND.WIDTH, BACKGROUND.HEIGHT, BACKGROUND.WIDTH)
     BARRIER_SPRITES = [LEFT_BARRIER, RIGHT_BARRIER]
     # create players
     P1 = Player(1, 'olinman', STAGE, BARRIER_SPRITES)
     P2 = Player(2, 'catboy', STAGE, BARRIER_SPRITES)
 
-
-    VIEW = PygameView(BACKGROUND,STAGE,LEFT_BARRIER,RIGHT_BARRIER, P1, P2)
+    VIEW = PygameView(BACKGROUND, STAGE, LEFT_BARRIER, RIGHT_BARRIER, P1, P2)
     HIT_DETECTOR = HitDetector((P1, P2))
     CONTROLLERS = [PygameInput(P1), PygameInput(P2)]
 
@@ -36,7 +36,7 @@ if __name__ == '__main__':
 
     VIEW.draw()
 
-    # game loop 
+    # game loop
     while True:
         for event in pygame.event.get():
             # Will run when the close window button is clicked
@@ -47,8 +47,8 @@ if __name__ == '__main__':
             for controller in CONTROLLERS:
                 controller.poll_input()
         elif not GAME_END:
-            print(f'{P2.character_name * P1.lost}{P1.character_name * P2.lost}' + \
-                    ' wins! Restart the game to play again.')
+            print(f'{P2.character_name * P1.lost}{P1.character_name * P2.lost}' +
+                  ' wins! Restart the game to play again.')
             GAME_END = True
 
         # check collisions then update p1 and p2
