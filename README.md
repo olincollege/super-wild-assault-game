@@ -10,3 +10,16 @@ The only module needed to run S.W.A.G. is `pygame` version 2.0 or greater, which
 
 ### Running the game
 The game can be opened by running `swag_game.py` with Python.
+
+### Controls
+Currently, the controls are very simple, as the included characters only have a few actions: move, jump, jab, and block. If a new move is added, it needs to be bound to a key by changing the dictionary `keybinds` in `swag_input_handler.py`. The default keybinds can be changed this way too.
+
+Player 1:
+* Arrow keys to move (up is jump)
+* . to jab
+* , to block
+
+Player 2:
+* WASD to move (W is jump)
+* C to jab
+* V to block
