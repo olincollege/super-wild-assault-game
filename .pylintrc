@@ -1,3 +1,4 @@
 [MASTER]
 
-extension-pkg-allow-list=pygame
+extension-pkg-allow-list = pygame
+additional-builtins = pygame
