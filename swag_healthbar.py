@@ -9,6 +9,10 @@ from pygame import Vector2
 class SwagHealthBar(pygame.sprite.Sprite):
     '''
     A healthbar class to control the visual change in health for each player.
+    Attributes:
+        target_health:
+        current_health:
+        
     '''
 
     def __init__(self, player_number: int, max_health: int):
