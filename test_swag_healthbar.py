@@ -1,18 +1,20 @@
-"""
-Test helper functions to aid with the game.
-"""
+'''
+Test healthbar functions for healthbar visualization and control.
+'''
 import pytest
 from swag_healthbar import SwagHealthBar
 
+# Healthbar color constants
 BLANK_BLACK_SOLID_COLOR = (0, 0, 0, 255)
 WHITE_SOLID_COLOR = (255, 255, 255, 255)
 RED_SOLID_COLOR = (255, 0, 0, 255)
 YELLOW_SOLID_TRANSITION_COLOR = (255, 255, 0, 255)
 BACKGROUND_COLOR = (44, 38, 69, 255)
 
-test_init_health_cases = [(3),(200),(-100),(0),(0.1),(150)]
-test_damage_cases = [(1), (150), (0),(0),(-1),(125)]
-test_health_to_damage_cases = [(test_init_health_cases[index],\
+# Test cases
+test_init_health_cases = [(3),(200),(-100),(0),(0.1),(150)] # Different input max_healths
+test_damage_cases = [(1), (150), (0),(0),(-1),(125)] # Different input damages taken
+test_health_to_damage_cases = [(test_init_health_cases[index], # Match above 2
     test_damage_cases[index]) for index in range(len(test_damage_cases))]
 
 @pytest.mark.parametrize("max_health",test_init_health_cases)
@@ -122,5 +124,3 @@ def test_healthbar_update_bar():
     # Check that current health and target health are now the same after loop
     assert test_player1.current_health == test_player1.target_health
     assert test_player2.current_health == test_player2.target_health
-
-
