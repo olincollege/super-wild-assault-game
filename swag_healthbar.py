@@ -1,5 +1,5 @@
 '''
-Swag healthbar. Based on: https://youtu.be/pUEZbUAMZYA, https://www.codepile.net/pile/XydlGQy1
+Swag healthbar, based on Dark Souls: https://youtu.be/pUEZbUAMZYA (video), https://www.codepile.net/pile/XydlGQy1 (code)
 '''
 from math import ceil
 import pygame
@@ -8,16 +8,16 @@ from pygame import Vector2
 
 class SwagHealthBar(pygame.sprite.Sprite):
     '''
-    [summary]
+    A healthbar class to control the visual change in health for each player.
     '''
 
     def __init__(self, player_number: int, max_health: int):
         '''
-        [summary]
+        Creates the instance for the healthbar for each player.
 
         Args:
-            player_number (int): [description]
-            max_health (int): [description]
+            player_number (int): 1 or 2, based on keyboard input selection
+            max_health (int): the maximum amount of health the character has
         '''
         super().__init__()
         pos = Vector2(0, 0)
@@ -36,16 +36,19 @@ class SwagHealthBar(pygame.sprite.Sprite):
 
     def damage(self, amount):
         '''
-        [summary]
+        Gets the amount of damage taken and removes it from the player
+        character's target health.
 
         Args:
-            amount ([type]): [description]
+            amount (integer): amount of damage taken by the player's character.
         '''
         self.target_health -= amount
 
     def update_bar(self):
         '''
-        [summary]
+        Changes the length of the health bar and the transitional bar (from
+        current state to next state of health) to match the current health
+        of the player's character to be rendered as a sprite.
         '''
         horizontal_flip = self.rect.left == 50
         transition_width = 0
