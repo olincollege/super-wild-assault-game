@@ -14,7 +14,8 @@ class SwagView(ABC):
     '''
 
     def __init__(self, background: SwagStageBackground, stage: SwagStage,
-                 barriers: Tuple[SwagBarriers, SwagBarriers], players: Tuple[Player, Player]) -> None:
+                 barriers: Tuple[SwagBarriers, SwagBarriers],\
+                     players: Tuple[Player, Player]) -> None:
         # Set up sprites
         self._background = background
         self._stage = stage
