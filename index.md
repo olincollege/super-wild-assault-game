@@ -34,31 +34,30 @@
 
 ### Sprites: Moveset Animations
 `Within the /SPRITES/[move]/ folder.`
-
-![](catboy_walk-1.png)![](catboy_walk-3.png)![](catboy_walk-5.png)![](catboy_walk-7.png)![](catboy_walk-9.png)![](catboy_walk-11.png)![](catboy_walk.gif)
-
 Add frames for animations for each the moves the character has! Here is the list of moves: Idle, walk, jab, block, air idle, jump, land, and got hit. When implemented with the *Player* script, this information is immediately utilized by the engine.
+
+<div align=center>
+<img src= "./catboy_walk-1.png"/> <img src= "./catboy_walk-3.png"/> <img src= "./catboy_walk-5.png"/> <img src= "./catboy_walk-7.png"/> <img src= "./catboy_walk-9.png"/> <img src= "./catboy_walk-11.png"/> <img src= "./catboy_walk.gif"/>
+</div>
 
 ### Framedata: Hitboxes and Hurtboxes
 `Within the [character].anim file, in CSV style.`
-<div align=center>
-<img src= "./olinman_jab.gif"/> <img src= "./catboy_hit.gif"/>
-</div>
 Give information about the size and location of these boxes which control the interaction between characters, such as whether or not a player's hit connects with the head and torso, or legs.
 - **Hitbox**: Where the player is vulnerable to being hit
 - **Hurtbox**: Where contact leads to damage of the opponent
+<div align=center>
+<img src= "./olinman_jab.gif"/> <img src= "./catboy_hit.gif"/>
+</div>
 
 <br/>
 <br/>
 <div align=center>
 <h1> About Us: </h1>
 <h2> Jacob Smilg </h2>
-<div style= "width:50%">
-ppppp ppppp pppppp ppppppp ppppppp  ppppp ppppppp pppppppp ppppppp pppppppp ppppp pppp ppppp pppp p </div>
+<div style= "width:50%"> Class of 2024. Hates video games.</div>
 <br/>
 <h2> Melissa Kazazic </h2>
-<div style= "width:50%">
-ppppp ppppp pppppp ppppppp ppppppp  ppppp ppppppp pppppppp ppppppp pppppppp ppppp pppp ppppp pppp p </div>
+<div style= "width:50%"> Class of 2024. Jock that shoves people into lockers.</div>
 <br/>
 <br/>
 <img src= "./title.png"/>
