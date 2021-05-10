@@ -1,6 +1,8 @@
 <div align=center>
 <br/>
 <img src= "./images/pixel_olin.png"/>
+<br/>
+<br/>
 <section id="downloads">
           <a href="./download" class="btn btn-github"><span class="icon"></span>Play the Game</a>
         </section>
@@ -9,7 +11,9 @@
 <br/>
 <br/>
 
-### S.W.A.G. is a platform fighter game drawing inspiration from M.U.G.E.N., Super Smash Bros., and Street Fighter. Our goal was to create a configurable engine similar to M.U.G.E.N. that new characters can be added to with relative ease.
+## S.W.A.G. is a platform fighter game drawing inspiration from M.U.G.E.N., Super Smash Bros., and Street Fighter. Our goal was to create a configurable engine similar to M.U.G.E.N. that new characters can be added to with relative ease.
+<br/>
+<br/>
 <br/>
 <br/>
 
@@ -18,8 +22,10 @@
 <br/>
 <br/>
 
-### Character Information
+### Character Information:
 `Within the [character].info file, in json style.`
+<br/>
+
 1. **Name, Health, Weight, and Physics:**
 
     - Customize the max health and weight of the character to set the feeling of the way that they move. 
@@ -37,9 +43,11 @@
 <br/>
 <br/>
 
-### Sprites: Moveset Animations
+### Sprites: Moveset Animations:
 `Within the /SPRITES/[move]/ folder.`
-Add frames for animations for each the moves the character has! Here is the list of moves: Idle, walk, jab, block, air idle, jump, land, and got hit. When implemented with the *Player* script, this information is immediately utilized by the engine.
+<br/>
+
+Add frames for animations for each the moves the character has! Here is the list of moves: **Idle**, **walk**, **jab**, **block**, **air idle**, **jump**, **land**, and got **hit**. When implemented with the *Player* script, this information is immediately utilized by the engine.
 
 <br/>
 <div align=center>
@@ -50,8 +58,9 @@ Add frames for animations for each the moves the character has! Here is the list
 <br/>
 <br/>
 
-### Framedata: Hitboxes and Hurtboxes
+### Framedata: Hitboxes and Hurtboxes:
 `Within the [character].anim file, in CSV style.`
+<br/>
 Give information about the size and location of these boxes which control the interaction between characters, such as whether or not a player's hit connects with the head and torso, or legs.
 - **Hitbox**: Where the player is vulnerable to being hit
 - **Hurtbox**: Where contact leads to damage of the opponent
@@ -64,10 +73,10 @@ Give information about the size and location of these boxes which control the in
 
 <div align=center>
 <h1> About Us: </h1>
-<h2> Jacob Smilg </h3>
+<h2> Jacob Smilg </h2>
 <div style= "width:50%"> Class of 2024.<br/>Hates video games.</div>
 <br/>
-<h2> Melissa Kazazic </h3>
+<h2> Melissa Kazazic </h2>
 <div style= "width:50%"> Class of 2024.<br/>Jock that shoves people into lockers.</div>
 <br/>
 <br/>
