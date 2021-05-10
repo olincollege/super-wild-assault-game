@@ -16,8 +16,8 @@ Currently, the controls are very simple, as the included characters only have a 
 
 Player 1:
 * Arrow keys to move (up is jump)
-* . to jab
-* , to block
+* Period to jab
+* Comma to block
 
 Player 2:
 * WASD to move (W is jump)
