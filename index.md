@@ -60,10 +60,21 @@ Add frames for animations for each the moves the character has! Here is the list
 `Within the [character].anim file, in CSV style.`
 <br/>
 Give information about the size and location of these boxes which control the interaction between characters, such as whether or not a player's hit connects with the head and torso, or legs.
+
+<span style="color:tomato">
+
 - **Hitbox**: Where the player is vulnerable to being hit
+
+</span>
+
+<span style="color:aquamarine">
+
 - **Hurtbox**: Where contact leads to damage of the opponent
+
+</span>
+<br/>
 <div align=center>
-<img src= "./images/olinman_jab.gif"/> <img src= "./images/catboy_hit.gif"/>
+ <img src= "./images/catboy_jab.gif" style='max-height: 110px'/> <img src= "./images/olinman_jab.gif"/> <img src= "./images/catboy_hit.gif"/> <img src= "./images/olinman_block.gif"/> <img src= "./images/catboy_block.gif" style='max-height: 100px'/>
 </div>
 <br/>
 <br/>
@@ -74,7 +85,6 @@ Give information about the size and location of these boxes which control the in
 </div>
 <br/>
 <br/>
-<br/>
 
 <div align=center>
 <h1> About Us: </h1>
@@ -83,6 +93,7 @@ Give information about the size and location of these boxes which control the in
 <br/>
 <h2> Melissa Kazazic </h2>
 <div style= "width:50%"> Class of 2024.<br/>Jock that shoves people into lockers.</div>
+<br/>
 <br/>
 <br/>
 <img src= "./images/title.png"/>
