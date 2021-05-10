@@ -1,6 +1,6 @@
 <div align=center>
 <br/>
-<img src= "./images/pixel_olin.png"/>
+<img src= "./images/gameplay.png"/>
 <br/>
 <br/>
 <section id="downloads">
