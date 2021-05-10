@@ -68,6 +68,13 @@ Give information about the size and location of these boxes which control the in
 <br/>
 <br/>
 <br/>
+<br/>
+
+<div style='border-bottom: 1px dashed #b5e853; width:100%'>
+</div>
+<br/>
+<br/>
+<br/>
 
 <div align=center>
 <h1> About Us: </h1>
