@@ -62,7 +62,12 @@ KEYBIND_TO_ACTION_CASES = [(KEY_DICT['UP'],     KEY_DICT['W'], 'jump'),
                            (KEY_DICT['PERIOD'], KEY_DICT['C'], 'jab'),
                            (KEY_DICT['COMMA'],  KEY_DICT['V'], 'block')]
 
-
+# Skip explanation below
+@pytest.mark.skip(
+    reason='''No way of currently testing this. We attempted using Pynput, but
+    it didn't work because the game didn't have keyboard focus. We also tested
+    using pygame.Events, however, it's not detected by 
+    pygame.keys.get_pressed.''')
 @pytest.mark.parametrize("player1_key, player2_key, expected_action",
                          KEYBIND_TO_ACTION_CASES)
 def test_poll_input(player1_key, player2_key, expected_action):
