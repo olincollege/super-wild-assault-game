@@ -71,8 +71,8 @@ class Player(pygame.sprite.Sprite):  # pylint: disable=too-many-instance-attribu
         super().__init__()
 
         self._player_number = player_number
-        self.surf = pygame.image.load(os.path.join('chars', character, 'sprites', 'idle',
-                                                   f'{character}_idle-1.png'))
+        self.surf = pygame.image.load(os.path.join('chars', character,
+                                                   'sprites', 'idle', f'{character}_idle-1.png'))
 
         # stage collisions
         self._stage_group = pygame.sprite.Group()
@@ -83,15 +83,16 @@ class Player(pygame.sprite.Sprite):  # pylint: disable=too-many-instance-attribu
             self._barrier_group.add(barrier_sprite)
 
         # import character properties from file
-        with open(os.path.join('chars', character, f'{character}.info'), 'r') as info_file:
+        with open(os.path.join('chars', character, f'{character}.info'),
+                  'r') as info_file:
             prop_dict = json.load(info_file)
             self._name = prop_dict['name']
             self._health = prop_dict['health']
             self._physics = PlayerPhysics(**(prop_dict['physics']))
             self._moves = prop_dict['moves']
 
-        self._animations = {move: Animation(character, MoveInfo(move, **move_info))
-                            for move, move_info in self._moves.items()}
+        self._animations = {move: Animation(character, MoveInfo(move,\
+            **move_info)) for move, move_info in self._moves.items()}
 
         # set up starting location
         if self._player_number == 1:
@@ -199,8 +200,8 @@ class Player(pygame.sprite.Sprite):  # pylint: disable=too-many-instance-attribu
                 new_animation = 'walk'
         if action == 'idle' and self._state == 'air':
             new_animation = 'air_idle'
-        # if prior move not the same and animation is ok to switch, reset animation frame then
-        # change current animation
+        # if prior move not the same and animation is ok to switch,
+        # reset animation frame then change current animation
         if self._current_animation.done or \
             (self._current_animation.cancelable and
                 self._current_animation.move != new_animation) and \
@@ -215,7 +216,8 @@ class Player(pygame.sprite.Sprite):  # pylint: disable=too-many-instance-attribu
 
         # special cases for when the player should be moving around
         # left/right:
-        if (action in ('left', 'right')) and self._moves[self._current_animation.move]['can_move']:
+        if (action in ('left', 'right')) and self._moves[
+                self._current_animation.move]['can_move']:
             if self._state == 'air':
                 self.controlled_acc.x = sign(-1*self._facing_left) * \
                     self._physics.air_accel
@@ -257,7 +259,8 @@ class Player(pygame.sprite.Sprite):  # pylint: disable=too-many-instance-attribu
         self.vel += self.acc    # update velocity
 
         # apply ground and air speed cap
-        if abs(self.vel.x) > self._physics.ground_speed and self._state == 'ground':
+        if abs(self.vel.x) > self._physics.ground_speed and self._state\
+                == 'ground':
             self.vel.x = self._physics.ground_speed * sign(self.vel.x)
         if abs(self.vel.x) > self._physics.air_speed and self._state == 'air':
             self.vel.x = self._physics.air_speed * sign(self.vel.x)
@@ -276,7 +279,8 @@ class Player(pygame.sprite.Sprite):  # pylint: disable=too-many-instance-attribu
 
         # if player is on the ground, don't let them fall through
         self._stage_collision_check()
-        self._barrier_collision_check()  # if the player is crossing over a window barrier
+        self._barrier_collision_check()  # if the player is crossing over a
+        # window barrier
 
         # update position based on current vel and accel
         self.pos += self.vel + 0.5 * self.acc
@@ -323,7 +327,8 @@ class Player(pygame.sprite.Sprite):  # pylint: disable=too-many-instance-attribu
                     self.pos.y = lowest.collision.top + 1
                     self.vel.y = 0
                     self.acc.y = 0
-                    if self._state == 'air' and self.current_animation.move != 'hit':
+                    if self._state == 'air' and self.current_animation.move\
+                            != 'hit':
                         self.switch_animation('land')
                     self._state = 'ground'
 
@@ -358,7 +363,8 @@ class Player(pygame.sprite.Sprite):  # pylint: disable=too-many-instance-attribu
                     self.vel.x = 0
                     self.acc.x = 0
 
-    def attacked(self, damage: int, base_knockback: float, knockback_direction: Vector2) -> None:
+    def attacked(self, damage: int, base_knockback: float,
+                 knockback_direction: Vector2) -> None:
         '''
         Called when a the character has been hit. Applied the appropriate
         damage and knockback.
@@ -380,7 +386,8 @@ class Player(pygame.sprite.Sprite):  # pylint: disable=too-many-instance-attribu
                 self._health = 0
 
 
-def hitbox_collision(sprite1: pygame.sprite.Sprite, sprite2: pygame.sprite.Sprite) -> bool:
+def hitbox_collision(sprite1: pygame.sprite.Sprite,
+                     sprite2: pygame.sprite.Sprite) -> bool:
     '''
     Check if two hitboxes collide.
     Args:

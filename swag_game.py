@@ -52,7 +52,7 @@ if __name__ == '__main__':
             for controller in CONTROLLERS:
                 controller.poll_input()
         elif not GAME_END:
-            print(f'{P2.character_name * P1.lost}{P1.character_name * P2.lost}' +
+            print(f'{P2.character_name *P1.lost}{P1.character_name * P2.lost}' +
                   ' wins! Restart the game to play again.')
             GAME_END = True
 

@@ -14,10 +14,9 @@ BACKGROUND_COLOR = (44, 38, 69, 255)
 # Test cases
 # Different input max_healths
 test_init_health_cases = [(3), (200), (-100), (0), (0.1), (150)]
-test_damage_cases = [(1), (150), (0), (0), (-1), (125)
-                     ]  # Different input damages taken
+test_damage_cases = [(1), (150), (0), (0), (-1), (125)]  # Different damages
 test_health_to_damage_cases = [(test_init_health_cases[index],  # Match above 2
-        test_damage_cases[index]) for index in range(len(test_damage_cases))]
+    test_damage_cases[index]) for index in range(len(test_damage_cases))]
 
 
 @pytest.mark.parametrize("max_health", test_init_health_cases)

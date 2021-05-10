@@ -38,7 +38,8 @@ class Animation:
 
         sprites_path = path.join(character_path, 'sprites', self.__move.name)
         sprite_filenames = listdir(sprites_path)
-        sprite_filenames = [path.join(sprites_path, name) for name in sprite_filenames
+        sprite_filenames = [path.join(sprites_path, name) for name in
+                            sprite_filenames
                             if name[-4:] == '.png']
         sprite_filenames.sort()
         self.__sprites_list = [pygame.image.load(
@@ -96,7 +97,8 @@ class Animation:
         try:
             return self.__collision_boxes['hit'][self.__current_frame_index+1]
         except KeyError:
-            return [CollisionBox(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, pygame.Rect(0, 0, 0, 0))]
+            return [CollisionBox(0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                 pygame.Rect(0, 0, 0, 0))]
 
     @property
     def current_hurtboxes(self) -> list:
@@ -110,7 +112,8 @@ class Animation:
         try:
             return self.__collision_boxes['hurt'][self.__current_frame_index+1]
         except KeyError:
-            return [CollisionBox(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, pygame.Rect(0, 0, 0, 0))]
+            return [CollisionBox(0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                 pygame.Rect(0, 0, 0, 0))]
 
     def get_current_frame(self) -> pygame.Surface:
         '''

@@ -87,7 +87,8 @@ class PygameView(SwagView):
     '''
 
     def __init__(self, background: SwagStageBackground, stage: SwagStage,
-                 barriers: Tuple[SwagBarriers, SwagBarriers], players: Tuple[Player, Player]):
+                 barriers: Tuple[SwagBarriers, SwagBarriers], players: Tuple[
+                     Player, Player]):
         # Set up window display
         super().__init__(background, stage, barriers, players)
         self.displaysurface = pygame.display.set_mode(

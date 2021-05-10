@@ -64,7 +64,7 @@ class SwagHealthBar(pygame.sprite.Sprite):
                 (self.current_health - self.target_health)/self.health_ratio)
         health_bar_width = int(self.target_health / self.health_ratio)
         if horizontal_flip:
-            health_bar = pygame.Rect(self.health_bar_length - health_bar_width, 0,
+            health_bar = pygame.Rect(self.health_bar_length-health_bar_width, 0,
                                      health_bar_width, 25)
             transition_bar = pygame.Rect(health_bar.left - transition_width,
                                          0, transition_width, 25)
