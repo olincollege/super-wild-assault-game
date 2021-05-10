@@ -1,5 +1,5 @@
 '''
-SWAG game view.
+SWAG game view - displays sprites.
 '''
 from abc import ABC, abstractmethod
 from typing import Tuple
@@ -10,12 +10,32 @@ from swag_stage import SwagStage, SwagStageBackground, SwagBarriers
 
 class SwagView(ABC):
     '''
-    Docstring
+    An abstract base class representing the view of the game. The abstract
+    still utilizes pygame sprite groups because the other view implementation
+    planned to still use a pygame surface to render the sprites, but draw the
+    actual results elsewhere.
+    Attribute:
+        _background (SwagStageBackground): Current instance of the background
+        _stage (SwagStage):  Current instance of the stage
+        _left_barrier (SwagBarriers): The left barrier of the pygame window
+        _right_barrier (SwagBarriers): The right barrier of the pygame window
+        all_sprites: All of the sprites for the game to display
+        _fps (integer): Frames per second
+        clock: Advances the frames of the game
     '''
 
     def __init__(self, background: SwagStageBackground, stage: SwagStage,
-                 barriers: Tuple[SwagBarriers, SwagBarriers],\
-                     players: Tuple[Player, Player]) -> None:
+                 barriers: Tuple[SwagBarriers, SwagBarriers],
+                 players: Tuple[Player, Player]) -> None:
+        '''
+        Creates a SwagView instance.
+        Args:
+            background (SwagStageBackground): Current instance of the background
+            stage (SwagStage): Current instance of the stage
+            barriers (tuple): A tuple of the barriers to display (in case images
+                are added later)
+            player (tuple): A tuple of the players to display.
+        '''
         # Set up sprites
         self._background = background
         self._stage = stage
@@ -58,10 +78,12 @@ class SwagView(ABC):
 
 class PygameView(SwagView):
     '''
-    ABC according to an instance of the SWAG game.
-
+    A view implementation based on pygame.
     Attributes:
-        scene: class representing current instance of game
+        displaysurface: Surface representing the game window
+        _background (SwagStageBackground): Current instance of the background
+        all_sprites: All of the sprites for the game to display
+        _clock: Advances the frames of the game
     '''
 
     def __init__(self, background: SwagStageBackground, stage: SwagStage,

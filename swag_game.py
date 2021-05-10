@@ -1,5 +1,10 @@
 '''
-Swag Game 👍
+S.W.A.G. Game - A 2D customizable platform fighter game created for a SoftDes
+2021 Final Project
+█░░░░░░░░▀█▄▀▄▀██████░▀█▄▀▄▀██████
+░░░░ ░░░░░░░▀█▄█▄███▀░░░ ▀█▄█▄███
+
+Authors: Jacob Smilg and Melissa Kazazic
 '''
 
 import sys

@@ -1,5 +1,6 @@
 '''
-docstring moment
+The Player class stores and modifies information about the player-controlled
+character.
 '''
 import os
 import json
@@ -13,20 +14,60 @@ from swag_healthbar import SwagHealthBar
 
 class Player(pygame.sprite.Sprite):  # pylint: disable=too-many-instance-attributes
     '''
-    [summary]
+    The Player class stores and modifies information about the
+    player-controlled character.
+
+    Attributes:
+        _player_number (int): 1 or 2, mostly accessed from other classes to
+             determine interactions
+        _surf (pygame.surface.Surface): The pygame surface occupied by the
+            player sprite
+        rect (pygame.Rect): Defines the location and boundaries of the player
+            sprite
+        _stage_group (pygame.sprite.Group): Contains the stage sprite object
+            for collision detection
+        _barrier_group (pygame.sprite.Group): Contains the barrier objects for
+            collision detection
+        _name (str): Name of the character being controlled
+        _health (int): Current health of the character being controlled
+        _physics (PlayerPhysics): A NamedTuple storing physics properties of
+        the character to interact with movement in environment
+            determine how they move around
+        _moves (dict): Stores information about moves (when they can start,
+            how much endlag, etc.)
+        _animations (dict): Contains animation objects for all of a characters
+            animations, bound to the move or action that activates them
+        _facing_left (bool): Whether or not the player is currently facing left
+            (to control if the sprite flips)
+        healthbar (SwagHealthBar): The character's healthbar
+        pos (pygame.Vector2): Position (x,y) of where the character is on the
+            pygame screen.
+        vel (pygame.Vector2): Velocity (x,y) of the character
+        acc (pygame.Vector2): Acceleration (x,y) of the character
+        controlled_acc (pygame.Vector2): Contains the x and y components of a
+            character's "controlled" acceleration, such as from jumping and
+            walking
+        knockback_acc (pygame.Vector2): Contains the x and y components of a
+            character's "non-controller" acceleration, such as from being
+            attacked
+        _state (str): 'air' or 'ground', the location of the character
+        _current_animation (Animation): The animation object representing the
+            current animation state of the character
     '''
 
     def __init__(self, player_number: int, character: str,
                  stage: SwagStage, barriers: list) -> None:
         '''
-        [summary]
-
+        Initializes a Player instance.
         Args:
-            player_number (int): [description]
-            character (str): [description]
-            stage (SwagStage): [description]
-            barriers (list): [description]
+            player_number (int): 1 or 2, representing which character is being
+                controlled
+            character (string): The name of the character being controlled, use
+                to call sprite information
+            stage (SwagStage): The stage the player is on.
+            barriers (list): The barriers of the screen.
         '''
+
         super().__init__()
 
         self._player_number = player_number
@@ -62,9 +103,6 @@ class Player(pygame.sprite.Sprite):  # pylint: disable=too-many-instance-attribu
             self.pos = Vector2((250, 250))
             self._facing_left = False
 
-        # set up win/loss condition
-        self._loss = False
-
         # set up healthbar
         self.healthbar = SwagHealthBar(self._player_number, self._health)
 
@@ -78,91 +116,79 @@ class Player(pygame.sprite.Sprite):  # pylint: disable=too-many-instance-attribu
         self._current_animation = self._animations['idle']  # type: Animation
 
     @property
-    def collision(self):
+    def collision(self) -> pygame.Rect:
         '''
-        [summary]
-
-        Returns:
-            [type]: [description]
+        Returns the collision box (rect) of the player.
         '''
         return self.rect
 
     @property
     def player_number(self) -> int:
         '''
-        [summary]
-
-        Returns:
-            int: [description]
+        Returns the player number (1 or 2)
         '''
         return self._player_number
 
     @property
     def character_name(self) -> str:
         '''
-        [summary]
-
-        Returns:
-            str: [description]
+        Returns the character name.
         '''
         return self._name
 
     @property
     def facing_left(self) -> bool:
         '''
-        [summary]
-
-        Returns:
-            bool: [description]
+        Returns a boolean representing whether the player is
+        facing left or right.
         '''
         return self._facing_left
 
     @property
     def health(self) -> int:
         '''
-        [summary]
-
-        Returns:
-            int: [description]
+        Returns an int value representing the player's current health.
         '''
         return self._health
 
     @property
     def current_animation(self) -> Animation:
         '''
-        [summary]
-
-        Returns:
-            Animation: [description]
+        Returns an Animation representing the player's current animation.
         '''
         return self._current_animation
 
     @property
     def lost(self) -> bool:
         '''
-        [summary]
+        Returns a boolean representing if the player has lost or not.
 
-        Returns:
-            bool: [description]
+        |   |  ||
+        ----------
+        ||  |  |_
         '''
-        return self._loss
+        if self._health <= 0:
+            return True
+        return False
 
     def switch_animation(self, animation_name: str) -> None:
         '''
-        [summary]
+        Changes the player's current animation after resetting it.
 
         Args:
-            animation_name (str): [description]
+            animation_name (str): Next animation for the character to switch
+                into
         '''
         self._current_animation.reset()
         self._current_animation = self._animations[animation_name]
 
     def action(self, action: str) -> None:
         '''
-        [summary]
+        Receives an action from the input handler and changes the player state
+        depending on a number of factors.
 
         Args:
-            action (str): [description]
+            action (str): The current input action move for the player
         '''
         # determine which animation is being asked for
         new_animation = action
@@ -203,9 +229,11 @@ class Player(pygame.sprite.Sprite):  # pylint: disable=too-many-instance-attribu
 
     def update(self) -> None:
         '''
-        [summary]
+        Changes the prior state of the player's character to the next state
+        for physics, movement, and animation
         '''
-        # add appropriate resistive force depending on whether or not the player is on the ground
+        # Add appropriate resistive force depending on whether or not the
+        # player is on the ground
         friction_acc = 0
         if not self.controlled_acc.x:
             if self._state == 'ground':
@@ -272,17 +300,19 @@ class Player(pygame.sprite.Sprite):  # pylint: disable=too-many-instance-attribu
 
     def _stage_collision(self) -> list:
         '''
-        [summary]
+        Checks if the player is in contact with the stage.
 
         Returns:
-            list: [description]
+            list: A list of collisions, should be empty if the player isn't
+                touching the stage.
         '''
         return pygame.sprite.spritecollide(self, self._stage_group,
                                            False, collided=hitbox_collision)
 
     def _stage_collision_check(self) -> None:
         '''
-        [summary]
+        Checks whether or not the player's character is on the stage, and
+        stops it from going below it.
         '''
         stage_collisions = self._stage_collision()
         if self.vel.y > 0:
@@ -299,17 +329,19 @@ class Player(pygame.sprite.Sprite):  # pylint: disable=too-many-instance-attribu
 
     def _barrier_collision(self) -> list:
         '''
-        [summary]
+        Checks if the player is in contact with the barriers.
 
         Returns:
-            list: [description]
+            list: A list of collisions, should be empty if the player isn't
+                touching either barrier.
         '''
         return pygame.sprite.spritecollide(self, self._barrier_group,
                                            False, collided=hitbox_collision)
 
     def _barrier_collision_check(self) -> None:
         '''
-        [summary]
+        Checks whether or not the player's touching one of two barriers, and
+        stops it from going past these barriers.
         '''
         barrier_collisions = self._barrier_collision()
         if barrier_collisions:
@@ -328,12 +360,14 @@ class Player(pygame.sprite.Sprite):  # pylint: disable=too-many-instance-attribu
 
     def attacked(self, damage: int, base_knockback: float, knockback_direction: Vector2) -> None:
         '''
-        [summary]
+        Called when a the character has been hit. Applied the appropriate
+        damage and knockback.
 
         Args:
-            damage (int): [description]
-            base_knockback (float): [description]
-            knockback_direction (Vector2): [description]
+            damage (int): The amount of damage taken by the character
+            base_knockback (float): The base knockback amount of the move
+            knockback_direction (Vector2): The x and y components representing
+                the directional knockback of the move
         '''
         if self.current_animation.move != 'hit':
             self.switch_animation('hit')
@@ -344,11 +378,15 @@ class Player(pygame.sprite.Sprite):  # pylint: disable=too-many-instance-attribu
                 self.healthbar.damage(damage)
             if self._health <= 0:
                 self._health = 0
-                self._loss = True
 
 
 def hitbox_collision(sprite1: pygame.sprite.Sprite, sprite2: pygame.sprite.Sprite) -> bool:
     '''
-    Check if two hitboxes collide
+    Check if two hitboxes collide.
+    Args:
+        sprite1 (pygame.sprite.Sprite): First sprite being checked
+        sprite2 (pygame.sprite.Sprite): Second sprite being checked
+    Returns:
+        Boolean of whether or not the sprites have collided
     '''
     return sprite1.collision.colliderect(sprite2.collision)

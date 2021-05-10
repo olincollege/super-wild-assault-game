@@ -8,28 +8,31 @@ from swag_player import Player
 
 class SwagInputHandler(ABC):  # pylint: disable=too-few-public-methods
     '''
-    Docstring lol
+    An abstract base class for the input handler.
+    Attributes:
+        _player (Player): The player controlled by the input handler
     '''
 
     def __init__(self, player: Player) -> None:
         '''
-        [summary]
-
-        Args:
-            player (Player): [description]
+        Creates the input handler
         '''
         self._player = player
 
     @abstractmethod
     def poll_input(self):
         '''
-        [summary]
+        Grabs input from whatever input source is being used.
+        Should call Player.action().
         '''
 
 
 class PygameInput(SwagInputHandler):  # pylint: disable=too-few-public-methods
     '''
-    Docstring lol
+    An input handler utilizing pygame events.
+    Attributes:
+        _keybinds (dict): A dict representing each player of a dict connecting
+        the possible inputs to a specific move.
     '''
 
     keybinds = {
@@ -51,17 +54,18 @@ class PygameInput(SwagInputHandler):  # pylint: disable=too-few-public-methods
 
     def __init__(self, player: Player) -> None:
         '''
-        [summary]
+        Creates an input handler.
 
         Args:
-            player (Player): [description]
+            player (Player): The player controlled by the input handler
         '''
         super().__init__(player)
         self._keybinds = self.keybinds[player.player_number]
 
     def poll_input(self):
         '''
-        [summary]
+        Set the current action according to the current inputs on the keyboard
+        and the keybinds as defined above
         '''
         keys_pressed = pygame.key.get_pressed()
         player_keys_pressed = {}

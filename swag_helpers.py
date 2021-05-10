@@ -1,5 +1,5 @@
 '''
-[summary]
+A list of helper functions and classes to be used by core scripts.
 '''
 from math import copysign
 from typing import NamedTuple
@@ -8,20 +8,20 @@ from pygame import Rect
 
 def sign(number) -> float:
     '''
-    [summary]
+    Returns 1 with the sign of a number.
 
     Args:
-        number ([type]): [description]
+        number: A number to get the sign of
 
     Returns:
-        float: [description]
+        float: 1 * the sign of the input
     '''
     return copysign(1, number)
 
 
 class PlayerPhysics(NamedTuple):
     '''
-    [summary]
+    A named tuple storing information about character physics.
     '''
     ground_accel: float
     ground_speed: float
@@ -36,7 +36,7 @@ class PlayerPhysics(NamedTuple):
 
 class CollisionBox(NamedTuple):
     '''
-    [summary]
+    A named tuple storing information about a hit or hurt box.
     '''
     x: int
     y: int
@@ -53,7 +53,7 @@ class CollisionBox(NamedTuple):
 
 class MoveInfo(NamedTuple):
     '''
-    [summary]
+    A named tuple storing information about character move info.
     '''
     name: str
     allowed_states: list

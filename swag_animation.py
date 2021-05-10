@@ -1,5 +1,5 @@
 '''
-[summary]
+Handles all character animations for SWAG.
 '''
 import csv
 from os import listdir, path
@@ -9,11 +9,30 @@ from swag_helpers import CollisionBox, MoveInfo
 
 class Animation:
     '''
-    [summary]
+    Stores information about a single character animation.
+
+    Attributes:
+        __move (MoveInfo): Information about the animation's associated move.
+        __sprites_list (list): A list of Surfaces for each frame of the
+            animation.
+        __collision_boxes (dict): A list of information about the hitboxes and
+            hurtboxes.
+        __current_frame_index (int): The current frame of animation.
+        __current_lag_frame (int): The current endlag frame.
+        __repetition (int): The current frame repetition, used to slow down the
+            speed of animations without decreasing the game's framerate.
+        __done (bool): Stores whether or not the animation is done playing.
+
     '''
     REPEAT_FRAME = 5
 
     def __init__(self, character: str, move: MoveInfo) -> None:
+        '''
+        Creates an Animation object.
+        Args:
+            character (str): Representing the character being controlled
+            move (MoveInfo): Info about the associated move
+        '''
         character_path = path.join('chars', character)
         self.__move = move
 
@@ -36,22 +55,22 @@ class Animation:
         self.__done = False
 
     def __repr__(self):
+        '''
+        Returns the move name and current frame as a string
+        '''
         return f'{self.__move.name} frame {self.__current_frame_index}'
 
     @property
     def move(self) -> str:
         '''
-        [summary]
+        Returns the string name of the current move
         '''
         return self.__move.name
 
     @property
     def cancelable(self) -> bool:
         '''
-        [summary]
-
-        Returns:
-            bool: [description]
+        Returns whether the move is cancelable in it's current state
         '''
         if self.__done:
             return True
@@ -61,20 +80,18 @@ class Animation:
     @property
     def done(self) -> bool:
         '''
-        [summary]
-
-        Returns:
-            bool: [description]
+        Returns whether the animation is done or not
         '''
         return self.__done
 
     @property
     def current_hitboxes(self) -> list:
         '''
-        [summary]
+        Returns the current hitboxes for the current sprite.
 
         Returns:
-            list: [description]
+            list: Collision boxes representing all the current hitboxes
+                of the sprite
         '''
         try:
             return self.__collision_boxes['hit'][self.__current_frame_index+1]
@@ -84,10 +101,11 @@ class Animation:
     @property
     def current_hurtboxes(self) -> list:
         '''
-        [summary]
+        Returns the current hurtboxes for the current sprite.
 
         Returns:
-            list: [description]
+            list: Collision boxes representing all the current hurtboxes
+                of the sprite
         '''
         try:
             return self.__collision_boxes['hurt'][self.__current_frame_index+1]
@@ -96,7 +114,7 @@ class Animation:
 
     def get_current_frame(self) -> pygame.Surface:
         '''
-        [summary]
+        Gets the current frame of the currently running animation.
 
         Returns:
             pygame.Surface: [description]
@@ -107,19 +125,20 @@ class Animation:
 
     def allowed_to_start(self, state: str) -> bool:
         '''
-        [summary]
+        Return whether or not the animation is allowed to start depending on a
+        character's state.
 
         Args:
-            state (str): [description]
+            state (str): next state of the character (ground or air)
 
         Returns:
-            bool: [description]
+            bool: whether or not the current move allows this state
         '''
         return state in self.__move.allowed_states
 
     def reset(self) -> None:
         '''
-        [summary]
+        Resets the frame index for the current animation.
         '''
         self.__current_frame_index = 0
         self.__current_lag_frame = 0
@@ -127,10 +146,10 @@ class Animation:
 
     def get_collision_boxes(self, framedata_path: str) -> None:
         '''
-        [summary]
+        Imports the animations collision boxes from it's .anim file.
 
         Args:
-            framedata_path (str): [description]
+            framedata_path (str): The file path of the .anim file
         '''
         if path.isfile(framedata_path):
             with open(framedata_path, newline='') as framedata_file:
@@ -156,12 +175,9 @@ class Animation:
                                 self.__collision_boxes['hit'][int(row[0])] = [
                                     box]
 
-    def update_frame(self) -> pygame.Surface:
+    def update_frame(self):
         '''
-        [summary]
-
-        Returns:
-            pygame.Surface: [description]
+        Updates the animation to the next frame, or changes its state to done.
         '''
         animation_length = len(self.__sprites_list)
         self.__repetition += 1

@@ -1,5 +1,6 @@
 '''
-Swag healthbar, based on Dark Souls: https://youtu.be/pUEZbUAMZYA (video), https://www.codepile.net/pile/XydlGQy1 (code)
+Swag healthbar, based on Dark Souls: https://youtu.be/pUEZbUAMZYA (video),
+https://www.codepile.net/pile/XydlGQy1 (code).
 '''
 from math import ceil
 import pygame
@@ -10,9 +11,8 @@ class SwagHealthBar(pygame.sprite.Sprite):
     '''
     A healthbar class to control the visual change in health for each player.
     Attributes:
-        target_health:
-        current_health:
-        
+        target_health: The player's health - what the healthbar moves to
+        current_health: The current health shown on the bar
     '''
 
     def __init__(self, player_number: int, max_health: int):
