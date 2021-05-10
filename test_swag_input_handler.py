@@ -75,16 +75,16 @@ def test_poll_input(player1_key, player2_key, expected_action):
     '''
     pygame.init()
     # Create mock players
-    P1 = PlayerMock(1)
-    P2 = PlayerMock(2)
+    player_1 = PlayerMock(1)
+    player_2 = PlayerMock(2)
     # Create mock controllers
-    CONTROLLER_1 = PygameInput(P1)
-    CONTROLLER_2 = PygameInput(P2)
+    controller_1 = PygameInput(player_1)
+    controller_2 = PygameInput(player_2)
     # Test for only Player 1 inputs
     pygame.event.clear()
     mock_key_input(player1_key)
     mock_key_input(player2_key)
-    CONTROLLER_1.poll_input()
-    CONTROLLER_2.poll_input()
-    assert P1.action_list == [expected_action]
-    assert P2.action_list == ['idle']
+    controller_1.poll_input()
+    controller_2.poll_input()
+    assert player_1.action_list == [expected_action]
+    assert player_2.action_list == ['idle']
