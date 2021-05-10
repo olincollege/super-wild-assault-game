@@ -14,8 +14,6 @@
 ## S.W.A.G. is a platform fighter game drawing inspiration from M.U.G.E.N., Super Smash Bros., and Street Fighter. Our goal was to create a configurable engine similar to M.U.G.E.N. that new characters can be added to with relative ease.
 <br/>
 <br/>
-<br/>
-<br/>
 
 # **The Engine**: *Create your own character*
 - Given the nature of S.W.A.G., anyone is able to create their own characters and add them to the fighting game! Here are the requirements of the characters as you add them in, in their own folder in the `/chars/` folder.
