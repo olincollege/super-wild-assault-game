@@ -6,7 +6,7 @@ S.W.A.G. is a simple, customizable platform fighter engine. Two players are spaw
 
 ## How to use
 ### Dependencies
-The only module needed to run S.W.A.G. is `pygame` version 2.0 or greater, which can be installed with `pip install pygame`. Alternatively, it can be installed with  `pip install -r requirements.txt` after cloning this repository to your computer.
+The only module needed to run S.W.A.G. is `pygame` version 2.0 or greater, which can be installed with `pip install pygame`. Alternatively, it can be installed with  `pip install -r requirements.txt` after cloning this repository to your computer. To run the unit tests, `pytest` is also required.
 
 ### Running the game
 The game can be opened by running `swag_game.py` with Python.
